@@ -2,16 +2,16 @@ package esprit.tn.cinecasa;
 
 import android.os.Bundle;
 import java.util.HashMap;
-import android.content.Intent;
+
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import esprit.tn.cinecasa.login.LoginFragment;
-import helper.SQLiteHandler;
-import helper.SessionManager;
+import esprit.tn.cinecasa.fragments.LoginFragment;
+import esprit.tn.cinecasa.datastorage.SQLiteHandler;
+import esprit.tn.cinecasa.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 

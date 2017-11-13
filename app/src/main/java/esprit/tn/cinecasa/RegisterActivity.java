@@ -1,4 +1,4 @@
-package esprit.tn.cinecasa.login;
+package esprit.tn.cinecasa;
 
 /**
  * Created by ahmed on 08-Nov-17.
@@ -27,12 +27,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import esprit.tn.cinecasa.MainActivity;
-import esprit.tn.cinecasa.R;
-import helper.SQLiteHandler;
-import helper.SessionManager;
-import singleton.AppConfig;
-import singleton.AppController;
+import esprit.tn.cinecasa.fragments.LoginFragment;
+import esprit.tn.cinecasa.datastorage.SQLiteHandler;
+import esprit.tn.cinecasa.utils.SessionManager;
+import esprit.tn.cinecasa.technique.AppConfig;
+import esprit.tn.cinecasa.utils.AppController;
 
 
 public class RegisterActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package singleton;
+package esprit.tn.cinecasa.utils;
 
 /**
  * Created by ahmed on 23-Oct-17.

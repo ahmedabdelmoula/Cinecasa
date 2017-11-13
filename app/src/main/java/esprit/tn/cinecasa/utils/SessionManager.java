@@ -1,4 +1,4 @@
-package helper;
+package esprit.tn.cinecasa.utils;
 
 /**
  * Created by ahmed on 11-Nov-17.

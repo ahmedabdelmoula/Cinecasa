@@ -8,8 +8,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="singleton.AppController">
-        <activity android:name=".login.RegisterActivity"/>
+        android:name="esprit.tn.cinecasa.utils.AppController">
+        <activity android:name=".RegisterActivity"/>
         <activity android:name=".MainActivity"/>
         <activity android:name=".SplashScreen">
             <intent-filter>
