@@ -24,14 +24,15 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import esprit.tn.cinecasa.MainActivity;
+import esprit.tn.cinecasa.CenterFabActivity;
+import esprit.tn.cinecasa.entities.User;
+import esprit.tn.cinecasa.utils.Context;
 import esprit.tn.cinecasa.R;
-
-import esprit.tn.cinecasa.datastorage.SQLiteHandler;
-import esprit.tn.cinecasa.utils.SessionManager;
 import esprit.tn.cinecasa.RegisterActivity;
+import esprit.tn.cinecasa.datastorage.SQLiteHandler;
 import esprit.tn.cinecasa.technique.AppConfig;
 import esprit.tn.cinecasa.utils.AppController;
+import esprit.tn.cinecasa.utils.SessionManager;
 
 /**
  * Created by ahmed on 09-Nov-17.
@@ -73,7 +74,10 @@ public class LoginFragment extends Fragment {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(getActivity(), RegisterActivity.class);
+            String UID = session.getUID();
+            Context.CURRENT_USER = db.getUserDetails(UID);
+//            Context.CURRENT_USER = db.getUserDetails(UID);
+            Intent intent = new Intent(getActivity(), CenterFabActivity.class);
             startActivity(intent);
             getActivity().finish();
         }
@@ -115,11 +119,12 @@ public class LoginFragment extends Fragment {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
+
         pDialog.setMessage("Logging in ...");
         showDialog();
 
         StringRequest strReq = new StringRequest(Request.Method.GET,
-                AppConfig.URL_LOGIN+"?email="+email+"&password="+password, new Response.Listener<String>() {
+                AppConfig.URL_LOGIN + "?email=" + email + "&password=" + password, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -127,7 +132,7 @@ public class LoginFragment extends Fragment {
                 hideDialog();
 
                 try {
-                    response=response.substring(10);
+                    response = response.substring(10);
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
 
@@ -135,23 +140,24 @@ public class LoginFragment extends Fragment {
                     if (!error) {
                         // user successfully logged in
                         // Create login session
-                        session.setLogin(true);
+
 
                         // Now store the user in SQLite
+                        int id = jObj.getInt("id");
                         String uid = jObj.getString("uid");
-
+                        session.setLogin(true, uid);
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
-                        String created_at = user
-                                .getString("created_at");
+                        String created_at = user.getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
-
+                        db.addUser(id, name, email, password, uid, created_at);
+//                        Context.CURRENT_USER = db.getUserDetails(uid);
+                        Context.CONNECTED_USER = db.getUserDetails(uid);
                         // Launch main activity
                         Intent intent = new Intent(fragment.getActivity(),
-                                MainActivity.class);
+                                CenterFabActivity.class);
                         startActivity(intent);
                         fragment.getActivity().finish();
                     } else {

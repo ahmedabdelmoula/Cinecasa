@@ -12,6 +12,8 @@ import android.util.Log;
 
 import java.util.HashMap;
 
+import esprit.tn.cinecasa.entities.User;
+
 public class SQLiteHandler extends SQLiteOpenHelper {
 
     private static final String TAG = SQLiteHandler.class.getSimpleName();
@@ -30,7 +32,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_UID = "uid";
     private static final String KEY_PASSWORD = "password";
+    private static final String KEY_CREATED_AT = "createdat";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,7 +45,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_PASSWORD  + ")";
+                + KEY_EMAIL + " TEXT UNIQUE," + KEY_PASSWORD + " TEXT UNIQUE," + KEY_UID + " TEXT," + KEY_CREATED_AT + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -60,16 +64,19 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String name, String email, String uid, String created_at) {
+    public void addUser(int id, String name, String email,String password, String uid, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(KEY_ID, id); // Name
         values.put(KEY_NAME, name); // Name
         values.put(KEY_EMAIL, email); // Email
-        values.put(KEY_PASSWORD, uid); // Email
+        values.put(KEY_PASSWORD, password); // Email
+        values.put(KEY_UID, uid); // Email
+        values.put(KEY_CREATED_AT, created_at); // Email
 
         // Inserting Row
-        long id = db.insert(TABLE_USER, null, values);
+        db.insert(TABLE_USER, null, values);
         db.close(); // Closing database connection
 
         Log.d(TAG, "New user inserted into sqlite: " + id);
@@ -78,18 +85,20 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Getting user data from database
      * */
-    public HashMap<String, String> getUserDetails() {
-        HashMap<String, String> user = new HashMap<String, String>();
-        String selectQuery = "SELECT  * FROM " + TABLE_USER;
+    public User getUserDetails(String UID) {
+        User user=new User();
+        String selectQuery = "SELECT  * FROM " + TABLE_USER + " WHERE "+ KEY_UID +" =? ";
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{UID});
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            user.put("name", cursor.getString(1));
-            user.put("email", cursor.getString(2));
-            user.put("password", cursor.getString(3));
+            user.setName(cursor.getString(1));
+            user.setEmail(cursor.getString(2));
+            user.setPassword(cursor.getString(3));
+            user.setUid(cursor.getString(4));
+            user.setCreated_at(cursor.getString(5));
         }
         cursor.close();
         db.close();

@@ -24,6 +24,7 @@ public class SessionManager {
 
     // Shared preferences file name
     private static final String PREF_NAME = "UserLogin";
+    private static final String PREF_UID = "uId";
 
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
 
@@ -33,10 +34,10 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-    public void setLogin(boolean isLoggedIn) {
+    public void setLogin(boolean isLoggedIn,String uId) {
 
         editor.putBoolean(KEY_IS_LOGGEDIN, isLoggedIn);
-
+        editor.putString(PREF_UID, uId);
         // commit changes
         editor.commit();
 
@@ -45,5 +46,7 @@ public class SessionManager {
 
     public boolean isLoggedIn(){
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
+    }
+    public String getUID(){ return pref.getString(PREF_UID,"no uid");
     }
 }

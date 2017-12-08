@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOP 10 Action Movies"
+        android:id="@+id/txtAction"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_Action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="horizontal" />
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOP 10 Adventure Movies"
+        android:id="@+id/txtAdventure"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_Adventure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="horizontal" />
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOP 10 Animation Movies"
+        android:id="@+id/txtAnimation"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_Animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="horizontal" />
+
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOP 10 Comedy Movies"
+        android:id="@+id/txtComedy"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_Comedy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="horizontal" />
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOP 10 Horror Movies"
+        android:id="@+id/txtHorror"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_Horror"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="horizontal" />
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOP 10 Romance Movies"
+        android:id="@+id/txtRomance"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_Romance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="horizontal" />
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOP 10 Science Fiction Movies"
+        android:id="@+id/txtScienceFiction"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_Science_Fiction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="horizontal" />
+
+</LinearLayout>

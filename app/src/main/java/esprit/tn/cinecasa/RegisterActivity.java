@@ -27,16 +27,17 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import esprit.tn.cinecasa.fragments.LoginFragment;
 import esprit.tn.cinecasa.datastorage.SQLiteHandler;
-import esprit.tn.cinecasa.utils.SessionManager;
+import esprit.tn.cinecasa.fragments.LoginFragment;
 import esprit.tn.cinecasa.technique.AppConfig;
 import esprit.tn.cinecasa.utils.AppController;
+import esprit.tn.cinecasa.utils.Context;
+import esprit.tn.cinecasa.utils.SessionManager;
 
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
-    private EditText inputName,inputEmail, inputPassword;
+    private EditText inputName, inputEmail, inputPassword;
     private Button btnSignIn, btnSignUp, btnResetPassword;
     private ProgressDialog pDialog;
     private SessionManager session;
@@ -67,7 +68,10 @@ public class RegisterActivity extends AppCompatActivity {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
+            String UID = session.getUID();
+            Context.CURRENT_USER = db.getUserDetails(UID);
+//            Context.CONNECTED_USER = db.getUserDetails(UID);
+            Intent intent = new Intent(RegisterActivity.this, CenterFabActivity.class);
             startActivity(intent);
             finish();
         }
@@ -119,16 +123,17 @@ public class RegisterActivity extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager=getSupportFragmentManager();
-                fragmentManager.beginTransaction().add(R.id.container, new LoginFragment(), "LoginFragment" ).commit();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().add(R.id.container, new LoginFragment(), "LoginFragment").commit();
             }
         });
 
     }
+
     /**
      * Function to store user in MySQL database will post params(tag, name,
      * email, password) to register url
-     * */
+     */
     private void registerUser(final String name, final String email,
                               final String password) {
         // Tag used to cancel the request
@@ -153,6 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                         // Now store the user in sqlite
                         String uid = jObj.getString("uid");
 
+                        int id = jObj.getInt("id");
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
@@ -160,13 +166,12 @@ public class RegisterActivity extends AppCompatActivity {
                                 .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
-
+                        db.addUser(id, name, email, password, uid, created_at);
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
                         // Launch login fragment
-                        FragmentManager fragmentManager=getSupportFragmentManager();
-                        fragmentManager.beginTransaction().add(R.id.container, new LoginFragment(), "LoginFragment" ).commit();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().add(R.id.container, new LoginFragment(), "LoginFragment").commit();
                     } else {
 
                         // Error occurred in registration. Get the error

@@ -1,77 +1,45 @@
 package esprit.tn.cinecasa;
 
 import android.os.Bundle;
-import java.util.HashMap;
-
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.Window;
+import android.view.WindowManager;
 
-import esprit.tn.cinecasa.fragments.LoginFragment;
-import esprit.tn.cinecasa.datastorage.SQLiteHandler;
-import esprit.tn.cinecasa.utils.SessionManager;
+import esprit.tn.cinecasa.fragments.LoopViewPagerFragment;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView txtName;
-    private TextView txtEmail;
-    private Button btnLogout;
-
-    private SQLiteHandler db;
-    private SessionManager session;
+    private static final int NUM_PAGES = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        //getSupportActionBar().hide();
 
-        txtName = (TextView) findViewById(R.id.name);
-        txtEmail = (TextView) findViewById(R.id.email);
-        btnLogout = (Button) findViewById(R.id.btnLogout);
+       /* BottomNavigationViewEx bnve = (BottomNavigationViewEx) findViewById(R.id.bnve);
 
-        // SqLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        bnve.enableItemShiftingMode(false);
+        bnve.enableShiftingMode(false);
+        bnve.setTextVisibility(false);
+        bnve.setIconSize(24, 24);
+        bnve.setItemBackground(1,0); */
 
-        // session manager
-        session = new SessionManager(getApplicationContext());
+        Fragment fragment = Fragment.instantiate(MainActivity.this, LoopViewPagerFragment.class.getName());
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+                android.R.anim.fade_in, android.R.anim.fade_out);
+        //fragmentTransaction.add(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(LoopViewPagerFragment.class.getName());
+        fragmentTransaction.commit();
 
-        if (!session.isLoggedIn()) {
-            logoutUser();
-        }
-
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-
-        String name = user.get("name");
-        String email = user.get("email");
-
-        // Displaying the user details on the screen
-        txtName.setText(name);
-        txtEmail.setText(email);
-
-        // Logout button click event
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                logoutUser();
-            }
-        });
-    }
-
-    /**
-     * Logging out the user. Will set isLoggedIn flag to false in shared
-     * preferences Clears the user data from sqlite users table
-     * */
-    private void logoutUser() {
-        session.setLogin(false);
-
-        db.deleteUsers();
-
-        // Launching the login activity
-        FragmentManager fragmentManager=getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.container, new LoginFragment(), "LoginFragment" ).commit();
     }
 }
