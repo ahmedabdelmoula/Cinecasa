@@ -2,6 +2,7 @@ package esprit.tn.cinecasa.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +46,7 @@ import esprit.tn.cinecasa.utils.SessionManager;
 public class LoginFragment extends Fragment {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private Button btnLogin;
-    private Button btnLinkToRegister;
+    private Button btnLinkToRegister, forgotPassword;
     private EditText inputEmail;
     private EditText inputPassword;
     private ProgressDialog pDialog;
@@ -50,16 +55,58 @@ public class LoginFragment extends Fragment {
     private View view;
     private AppCompatActivity activity;
     private Fragment fragment;
+    private ImageView bottomImg;
+    private ImageButton facebook, lickedIn, twiter;
+    private CheckBox rememberMe;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_login, container, false);
 
         fragment = this;
+
+        facebook = (ImageButton) view.findViewById(R.id.facebook_icon);
+        Glide
+                .with(getContext())
+                .load(R.drawable.facebook)
+                .asBitmap()
+                .into(facebook);
+
+        lickedIn = (ImageButton) view.findViewById(R.id.linked_in_icon);
+        Glide
+                .with(getContext())
+                .load(R.drawable.linked_in)
+                .asBitmap()
+                .into(lickedIn);
+
+        twiter = (ImageButton) view.findViewById(R.id.twitter_icon);
+        Glide
+                .with(getContext())
+                .load(R.drawable.twitter)
+                .asBitmap()
+                .into(twiter);
+
+        bottomImg = (ImageView) view.findViewById(R.id.bottom_img);
+        Glide
+                .with(getContext())
+                .load(R.drawable.bottom_bg)
+                .asBitmap()
+                .into(bottomImg);
         inputEmail = (EditText) view.findViewById(R.id.email);
         inputPassword = (EditText) view.findViewById(R.id.password);
         btnLogin = (Button) view.findViewById(R.id.btn_login);
+        forgotPassword = (Button) view.findViewById(R.id.btn_reset_password);
+        rememberMe = (CheckBox) view.findViewById(R.id.remember_me);
         btnLinkToRegister = (Button) view.findViewById(R.id.btn_signup);
+
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),"Lato-Light.ttf");
+        inputEmail.setTypeface(tf);
+        inputPassword.setTypeface(tf);
+        btnLogin.setTypeface(tf);
+        btnLinkToRegister.setTypeface(tf);
+        rememberMe.setTypeface(tf);
+        forgotPassword.setTypeface(tf);
+
 
         // Progress dialog
         pDialog = new ProgressDialog(this.getActivity());

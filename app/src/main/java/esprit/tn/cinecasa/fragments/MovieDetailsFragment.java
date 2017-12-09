@@ -23,9 +23,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -57,9 +59,10 @@ public class MovieDetailsFragment extends Fragment {
     private List<Cast> castList;
     private List<Review> listReview;
     private View view;
+    RoundedImageView ivposter;
     ListView reviewList;
     Fragment fragment=this;
-    ImageView ivposter;
+    ImageView detailsBG;
     TextView txttitle,txtvote_count,txtvote_average,txtpopularity,txtoriginal_title,txtoverview,txtrelease_date;
     EditText txtratevalue;
     Button btrate;
@@ -100,17 +103,23 @@ public class MovieDetailsFragment extends Fragment {
         txtoriginal_title = (TextView) view.findViewById(R.id.txtoriginal_title);
         txtoverview = (TextView) view.findViewById(R.id.txtoverview);
         txtrelease_date = (TextView) view.findViewById(R.id.txtrelease_date);
-        ivposter = (ImageView) view.findViewById(R.id.ivposter);
+        ivposter = (RoundedImageView) view.findViewById(R.id.ivposter);
+        detailsBG = (ImageView) view.findViewById(R.id.details_bg);
         reviewList = (ListView) view.findViewById(R.id.listReview);
 
-        txttitle.setText("Title : "+ Context.ITEM_MOVIE.getTitle());
+        Glide
+                .with(getContext())
+                .load(R.drawable.details_bg)
+                .into(detailsBG);
+
+        txttitle.setText( Context.ITEM_MOVIE.getTitle());
         txtvote_count.setText("Vote Count : "+ Context.ITEM_MOVIE.getVote_count());
         txtvote_average.setText("Vote Average : "+ Context.ITEM_MOVIE.getVote_average().toString());
         txtpopularity.setText("Popularity : "+ Context.ITEM_MOVIE.getPopularity().toString());
         txtoriginal_title.setText("Original Title : "+ Context.ITEM_MOVIE.getOriginal_title());
         txtrelease_date.setText("Release Date : "+ Context.ITEM_MOVIE.getRelease_date());
         txtoverview.setText("Story : "+ Context.ITEM_MOVIE.getOverview());
-        Picasso.with(getActivity()).load(Context.ITEM_MOVIE.getPoster_path()).into(ivposter);
+        Glide.with(getActivity()).load(Context.ITEM_MOVIE.getPoster_path()).into(ivposter);
 
         youTubePlayer = YouTubePlayerSupportFragment.newInstance();
 
@@ -229,7 +238,7 @@ public class MovieDetailsFragment extends Fragment {
                     for (int i = 0; i < results.length(); i++) {
 
                         JSONObject cast = (JSONObject) results.get(i);
-                        Cast cast1=new Cast(cast.getInt("cast_id"), cast.getString("character"), cast.getString("credit_id"), cast.getInt("gender"), cast.getInt("id"), cast.getString("name"), cast.getInt("order"), "https://image.tmdb.org/t/p/w300"+cast.getString("profile_path"));
+                        Cast cast1=new Cast(cast.getInt("cast_id"), cast.getString("character"), cast.getString("credit_id"), cast.getInt("gender"), cast.getInt("id"), cast.getString("name"), cast.getInt("order"), "https://image.tmdb.org/t/p/w150"+cast.getString("profile_path"));
 
                         dataSource.add(cast1);
 
