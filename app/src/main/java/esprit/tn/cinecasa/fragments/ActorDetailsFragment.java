@@ -1,5 +1,7 @@
 package esprit.tn.cinecasa.fragments;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
@@ -7,6 +9,11 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +28,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
+import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -38,6 +49,7 @@ import esprit.tn.cinecasa.utils.AppController;
 import esprit.tn.cinecasa.utils.AutoResizeTextView;
 import esprit.tn.cinecasa.utils.CircleTransform;
 import esprit.tn.cinecasa.utils.Context;
+import esprit.tn.cinecasa.utils.TabEntity;
 
 /**
  * Created by Yessine on 12/3/2017.
@@ -50,10 +62,14 @@ public class ActorDetailsFragment extends Fragment {
     private ProgressDialog pDialog;
     private static String TAG = ActorDetailsFragment.class.getSimpleName();
     private AutoResizeTextView actorName;
+    private TextView underName;
     private Button favoriteButton;
     private CircularImageView actorImage;
     private boolean backImage;
     private RelativeLayout relativeLayout;
+    private ArrayList<Fragment> fragments;
+    private CommonTabLayout mTabLayout;
+    private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,17 +78,38 @@ public class ActorDetailsFragment extends Fragment {
 
         pDialog = new ProgressDialog(getActivity());
 
-
         actorName = (AutoResizeTextView) view.findViewById(R.id.actor_name);
+        underName = (TextView) view.findViewById(R.id.under_name);
         favoriteButton = (Button) view.findViewById(R.id.add_favorite);
         actorImage = (CircularImageView) view.findViewById(R.id.actor_image);
         relativeLayout = (RelativeLayout) view.findViewById(R.id.background);
+        mTabLayout = (CommonTabLayout) view.findViewById(R.id.common_tab);
+
+        mTabEntities.add(new TabEntity("Details"));
+        mTabEntities.add(new TabEntity("Movies"));
+        mTabEntities.add(new TabEntity("TV Shows"));
+        mTabEntities.add(new TabEntity("Images"));
+
+        fragments = new ArrayList<>();
 
         getActorDetails();
 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(actorName, "alpha", 0, 1),
+                ObjectAnimator.ofFloat(underName, "alpha", 0, 1),
+                ObjectAnimator.ofFloat(view.findViewById(R.id.starr), "alpha", 0, 1),
+                ObjectAnimator.ofFloat(view.findViewById(R.id.popularity), "alpha", 0, 1));
+        animatorSet.setDuration(1000);
+        animatorSet.start();
+    }
 
     private void getActorDetails() {
 
@@ -129,7 +166,6 @@ public class ActorDetailsFragment extends Fragment {
 
     private void getFav() {
 
-
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 "http://idol-design.com/Cinecasa/Scripts/SelectActorsByUserId.php?id_user=1",// + Context.CONNECTED_USER.getId(),
                 null, new Response.Listener<JSONObject>() {
@@ -157,12 +193,37 @@ public class ActorDetailsFragment extends Fragment {
 //                    layerDrawable.setDrawableByLayerId(R.id.bitmap, getResources().getDrawable( R.drawable.bebe_pp ));
 //                    relativeLayout.setBackground(layerDrawable);
                     try {
-                        actorName.setText(actor.getName());
                         Picasso
                                 .with(getContext())
                                 .load(actor.getImage())
                                 .into(actorImage);
 
+                        actorName.setText(actor.getName());
+                        underName.setText(actor.getPlaceOfBirth());
+
+                        Bundle b = new Bundle();
+                        b.putString("mediaType", "Movie");
+                        b.putInt("id", actor.getId());
+                        CombinedCrediDetails frag = new CombinedCrediDetails();
+                        frag.setArguments(b);
+
+                        Bundle bb = new Bundle();
+                        bb.putString("mediaType", "TV");
+                        bb.putInt("id", actor.getId());
+                        CombinedCrediDetails2 fragg = new CombinedCrediDetails2();
+                        fragg.setArguments(bb);
+
+                        Bundle bbb = new Bundle();
+                        bbb.putInt("id", actor.getId());
+                        ActorDetailsImages fraggg = new ActorDetailsImages();
+                        fraggg.setArguments(bbb);
+
+                        fragments.add(SimpleCardFragment.getInstance(actor.getBiography()));
+                        fragments.add(frag);
+                        fragments.add(fragg);
+                        fragments.add(fraggg);
+
+                        mTabLayout.setTabData(mTabEntities, getActivity(), R.id.fl_change, fragments);
                     } catch (NullPointerException e) {
                         actorName.setText("None");
                     }
@@ -174,6 +235,31 @@ public class ActorDetailsFragment extends Fragment {
                         favoriteButton.setBackgroundResource(R.drawable.ic_favorite_full_64dp);
                         backImage = true;
                     }
+
+
+                    mTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
+                        @Override
+                        public void onTabSelect(int position) {
+                            if (position == 0) {
+
+                                SimpleCardFragment f = (SimpleCardFragment) fragments.get(0);
+                                f.animation();
+                            } else if (position == 1) {
+
+                                CombinedCrediDetails f = (CombinedCrediDetails) fragments.get(1);
+                                f.animation();
+                            } else if (position == 2) {
+
+                                CombinedCrediDetails2 f = (CombinedCrediDetails2) fragments.get(2);
+                                f.animation();
+                            }
+                        }
+
+                        @Override
+                        public void onTabReselect(int position) {
+
+                        }
+                    });
 
                     favoriteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -190,8 +276,6 @@ public class ActorDetailsFragment extends Fragment {
                                 swapFavorite(url);
                                 backImage = !backImage;
                             }
-
-
                         }
                     });
 
@@ -257,5 +341,4 @@ public class ActorDetailsFragment extends Fragment {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
-
 }

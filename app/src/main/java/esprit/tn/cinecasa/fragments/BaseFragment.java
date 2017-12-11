@@ -24,7 +24,8 @@ public class BaseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // get title
-        title = getArguments().getString("title");
+//        title = getArguments().getString("title");
+        title = "Hello";
     }
 
     @Nullable

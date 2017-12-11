@@ -45,7 +45,6 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.MyViewHolder> 
                 public void onClick(View v) {
                     int position = getAdapterPosition();
 
-
                     esprit.tn.cinecasa.utils.Context.ACTOR_ID = castList.get(position).getId();
                     esprit.tn.cinecasa.utils.Context.selected = 2;
                     Intent intent = new Intent(mContext, DetailsActivity.class);

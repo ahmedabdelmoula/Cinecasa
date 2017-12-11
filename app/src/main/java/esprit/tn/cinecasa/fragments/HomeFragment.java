@@ -36,7 +36,7 @@ public class HomeFragment extends Fragment {
 
         ViewPager vpChild = (ViewPager) view.findViewById(R.id.vpChild);
 
-        vpChild.setOffscreenPageLimit(5);
+        vpChild.setOffscreenPageLimit(0);
 
         fragments = new ArrayList<>(4);
 

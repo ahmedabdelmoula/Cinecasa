@@ -5,6 +5,7 @@
     <color name="colorSecondary">#FFFFFF</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="star">#F6CE59</color>
 
     <color name="colorGreen">#ff669900</color>
     <color name="colorGray">#ccc</color>

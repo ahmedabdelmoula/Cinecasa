@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.github.ppamorim.dragger.DraggerPanel;
 
@@ -63,8 +64,8 @@ public class PanelActivity extends AbstractActivity {
         draggerPanel.addViewOnShadow(
                 layoutInflater.inflate(R.layout.layout_shadow, draggerPanel, false));
 
-        Button movies = (Button) findViewById(R.id.movies);
-        Button tv_series = (Button) findViewById(R.id.tv_series);
+        ImageButton movies = (ImageButton) findViewById(R.id.movies);
+        ImageButton tv_series = (ImageButton) findViewById(R.id.tv_series);
 
         movies.setOnClickListener(new View.OnClickListener() {
             @Override

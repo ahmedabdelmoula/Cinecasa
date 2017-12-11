@@ -1,114 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorSecondary">
 
-    <RelativeLayout
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@drawable/backgroundd"></RelativeLayout>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/background"
-        android:layout_marginTop="-130dp"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/actor_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/bebe_pp"
-                app:civ_border_color="@color/semiTransparentWhite"
-                app:civ_border_width="10dp" />
-
-            <Button
-                android:id="@+id/add_favorite"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/actor_image"
-                android:background="@drawable/ic_favorite_empty_64dp" />
-
-
-            <Button
-                android:id="@+id/test"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@id/add_favorite"
-                android:background="@drawable/ic_more_vert_black_64dp" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginStart="12dp"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <esprit.tn.cinecasa.utils.AutoResizeTextView
-                android:id="@+id/actor_name"
+            <RelativeLayout
+                android:id="@+id/background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="Bebe Rexha"
-                android:textColor="@android:color/black"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:text="musician, singer, songwriter"
-                android:textSize="14sp" />
+                android:layout_height="300dp"
+                android:background="@drawable/backgroundd"></RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"></LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/background"
+                android:layout_marginTop="-130dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    </LinearLayout>
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:id="@+id/actor_image"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/bebe_pp"
+                        app:civ_border_color="@color/semiTransparentWhite"
+                        app:civ_border_width="10dp" />
 
-</RelativeLayout><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:orientation="vertical"--><!--android:weightSum="3"--><!--android:background="@color/background">-->
-
-    <!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="0dp"--><!--android:layout_weight="1"--><!--android:gravity="center">-->
-
-    <!--<RelativeLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:gravity="center">-->
-
-    <!--<com.makeramen.roundedimageview.RoundedImageView xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:id="@+id/actor_image"--><!--android:layout_width="128dp"--><!--android:layout_height="128dp"--><!--android:layout_marginEnd="20dp"--><!--android:layout_marginStart="20dp"--><!--android:adjustViewBounds="true"--><!--android:elevation="4dp"--><!--android:scaleType="fitCenter"--><!--app:riv_corner_radius="200dp" />-->
-
-
-    <!--</RelativeLayout>-->
-
-    <!--</LinearLayout>-->
+                    <Button
+                        android:id="@+id/add_favorite"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toRightOf="@id/actor_image"
+                        android:background="@drawable/ic_favorite_empty_64dp" />
 
 
-    <!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="0dp"--><!--android:layout_weight="2"--><!--android:gravity="center">-->
+                    <Button
+                        android:id="@+id/test"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@id/add_favorite"
+                        android:background="@drawable/ic_more_vert_black_64dp" />
 
-    <!--<TextView--><!--android:id="@+id/actor_name"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:text="Name"--><!--android:textSize="30dp" />-->
+                </RelativeLayout>
 
-    <!--</LinearLayout>-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-    <!--</LinearLayout>-->
+                    <esprit.tn.cinecasa.utils.AutoResizeTextView
+                        android:id="@+id/actor_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="Bebe Rexha"
+                        android:textColor="@android:color/black"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:id="@+id/under_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:text="musician, singer, songwriter"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/starr"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/star"
+                            android:scaleType="center"/>
+
+                        <TextView
+                            android:id="@+id/popularity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:text="6.8"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.flyco.tablayout.CommonTabLayout
+                    android:id="@+id/common_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:alpha=".9"
+                    android:background="@color/colorPrimary"
+                    tl:tl_iconVisible="false"
+                    tl:tl_indicator_width="25dp"
+                    tl:tl_textBold="SELECT"
+                    tl:tl_textsize="15sp" />
+
+
+                <FrameLayout
+                    android:id="@+id/fl_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></FrameLayout>
+
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

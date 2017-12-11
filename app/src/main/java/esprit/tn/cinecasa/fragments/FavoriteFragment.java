@@ -64,14 +64,9 @@ public class FavoriteFragment extends Fragment {
 
 
         fragments = new ArrayList<>();
-//        fragments.add(new ActorProfileFragment());
-
         adapter = new Adapter(getChildFragmentManager(), fragments);
         pager.setAdapter(adapter);
-//        tabProvider = getTabProvider();
-//
-//        tabs.setCustomTabView(tabProvider);
-//        tabs.setViewPager(pager);
+
         pDialog = new ProgressDialog(getActivity());
         actors = new ArrayList<>();
         makeJsonObjectRequest();
@@ -183,7 +178,8 @@ public class FavoriteFragment extends Fragment {
                     actors.add(actor);
 
                     Bundle b = new Bundle();
-                    b.putString("birthday", actor.getBiography());
+                    b.putInt("id", actor.getId());
+                    b.putString("birthday", actor.getBirthday());
                     b.putString("deathday", actor.getDeathday());
                     b.putString("biography", actor.getBiography());
                     b.putString("place_of_birth", actor.getPlaceOfBirth());

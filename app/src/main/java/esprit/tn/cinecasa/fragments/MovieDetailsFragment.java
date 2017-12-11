@@ -61,9 +61,9 @@ public class MovieDetailsFragment extends Fragment {
     private View view;
     RoundedImageView ivposter;
     ListView reviewList;
-    Fragment fragment=this;
+    Fragment fragment = this;
     ImageView detailsBG;
-    TextView txttitle,txtvote_count,txtvote_average,txtpopularity,txtoriginal_title,txtoverview,txtrelease_date;
+    TextView txttitle, txtvote_count, txtvote_average, txtpopularity, txtoriginal_title, txtoverview, txtrelease_date;
     EditText txtratevalue;
     Button btrate;
     String session_id;
@@ -72,13 +72,13 @@ public class MovieDetailsFragment extends Fragment {
     // YouTube player view
     private YouTubePlayerSupportFragment youTubePlayer;
     private String urlJsonObj = "https://api.themoviedb.org/3/movie/";
-    private String urlSession="https://api.themoviedb.org/3/authentication/guest_session/new?api_key=7c408d3e3e9aec97d01604333744b592";
-    private String urlJsonObjPart2="/videos?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
+    private String urlSession = "https://api.themoviedb.org/3/authentication/guest_session/new?api_key=7c408d3e3e9aec97d01604333744b592";
+    private String urlJsonObjPart2 = "/videos?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private String urlJsonCast = "https://api.themoviedb.org/3/movie/";
-    private String urlJsonCastPart2="/credits?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
-    private String urlJsonReview="https://api.themoviedb.org/3/movie/"+ Context.ITEM_MOVIE.getId()+"/reviews?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=1";
+    private String urlJsonCastPart2 = "/credits?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
+    private String urlJsonReview = "https://api.themoviedb.org/3/movie/" + Context.ITEM_MOVIE.getId() + "/reviews?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=1";
     private static String TAG = MovieDetailsFragment.class.getSimpleName();
-    String Youtube_code="";
+    String Youtube_code = "";
     private ProgressDialog pDialog;
 
     @Override
@@ -87,8 +87,8 @@ public class MovieDetailsFragment extends Fragment {
         castList = new ArrayList<>();
         pDialog = new ProgressDialog(this.getActivity());
         pDialog.setCancelable(false);
-        urlJsonObj=urlJsonObj+ Context.ITEM_MOVIE.getId()+urlJsonObjPart2;
-        urlJsonCast=urlJsonCast+ Context.ITEM_MOVIE.getId()+urlJsonCastPart2;
+        urlJsonObj = urlJsonObj + Context.ITEM_MOVIE.getId() + urlJsonObjPart2;
+        urlJsonCast = urlJsonCast + Context.ITEM_MOVIE.getId() + urlJsonCastPart2;
         makeJsonObjectRequest();
         makeJsonObjectCastRequest();
         makeJsonObjectReviewRequest();
@@ -112,13 +112,13 @@ public class MovieDetailsFragment extends Fragment {
                 .load(R.drawable.details_bg)
                 .into(detailsBG);
 
-        txttitle.setText( Context.ITEM_MOVIE.getTitle());
-        txtvote_count.setText("Vote Count : "+ Context.ITEM_MOVIE.getVote_count());
-        txtvote_average.setText("Vote Average : "+ Context.ITEM_MOVIE.getVote_average().toString());
-        txtpopularity.setText("Popularity : "+ Context.ITEM_MOVIE.getPopularity().toString());
-        txtoriginal_title.setText("Original Title : "+ Context.ITEM_MOVIE.getOriginal_title());
-        txtrelease_date.setText("Release Date : "+ Context.ITEM_MOVIE.getRelease_date());
-        txtoverview.setText("Story : "+ Context.ITEM_MOVIE.getOverview());
+        txttitle.setText(Context.ITEM_MOVIE.getTitle());
+        txtvote_count.setText("Vote Count : " + Context.ITEM_MOVIE.getVote_count());
+        txtvote_average.setText("Vote Average : " + Context.ITEM_MOVIE.getVote_average().toString());
+        txtpopularity.setText("Popularity : " + Context.ITEM_MOVIE.getPopularity().toString());
+        txtoriginal_title.setText("Original Title : " + Context.ITEM_MOVIE.getOriginal_title());
+        txtrelease_date.setText("Release Date : " + Context.ITEM_MOVIE.getRelease_date());
+        txtoverview.setText("Story : " + Context.ITEM_MOVIE.getOverview());
         Glide.with(getActivity()).load(Context.ITEM_MOVIE.getPoster_path()).into(ivposter);
 
         youTubePlayer = YouTubePlayerSupportFragment.newInstance();
@@ -158,10 +158,8 @@ public class MovieDetailsFragment extends Fragment {
         });
 
 
-
         return view;
     }
-
 
 
     private void makeJsonObjectRequest() {
@@ -182,17 +180,15 @@ public class MovieDetailsFragment extends Fragment {
                     for (int i = 0; i < results.length(); i++) {
 
                         JSONObject movie = (JSONObject) results.get(i);
-                        YoutubeVideo youtubeVideo=new YoutubeVideo(movie.getString("key"),movie.getString("size"));
+                        YoutubeVideo youtubeVideo = new YoutubeVideo(movie.getString("key"), movie.getString("size"));
 
                         dataSource.add(youtubeVideo);
 
                     }
-                    Youtube_code=dataSource.get(0).getKey();
-                    for (YoutubeVideo y : dataSource)
-                    {
-                        if (y.getSize().contains("720"))
-                        {
-                            Youtube_code=y.getKey();
+                    Youtube_code = dataSource.get(0).getKey();
+                    for (YoutubeVideo y : dataSource) {
+                        if (y.getSize().contains("720")) {
+                            Youtube_code = y.getKey();
                         }
                     }
 
@@ -238,17 +234,17 @@ public class MovieDetailsFragment extends Fragment {
                     for (int i = 0; i < results.length(); i++) {
 
                         JSONObject cast = (JSONObject) results.get(i);
-                        Cast cast1=new Cast(cast.getInt("cast_id"), cast.getString("character"), cast.getString("credit_id"), cast.getInt("gender"), cast.getInt("id"), cast.getString("name"), cast.getInt("order"), "https://image.tmdb.org/t/p/w150"+cast.getString("profile_path"));
+                        Cast cast1 = new Cast(cast.getInt("cast_id"), cast.getString("character"), cast.getString("credit_id"), cast.getInt("gender"), cast.getInt("id"), cast.getString("name"), cast.getInt("order"), "https://image.tmdb.org/t/p/w150" + cast.getString("profile_path"));
 
                         dataSource.add(cast1);
 
                     }
-                    castList=dataSource;
-                    castadapter  = new CastAdapter(getActivity(),castList);
+                    castList = dataSource;
+                    castadapter = new CastAdapter(getActivity(), castList);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(mLayoutManager);
-                   recyclerView.setAdapter(castadapter);
-                   //setListViewHeightBasedOnChildren(recyclerView);
+                    recyclerView.setAdapter(castadapter);
+                    //setListViewHeightBasedOnChildren(recyclerView);
 
 
                 } catch (JSONException e) {
@@ -277,7 +273,7 @@ public class MovieDetailsFragment extends Fragment {
     private void getSession() {
 
 
-        StringRequest strReq = new StringRequest(Request.Method.GET,urlSession, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, urlSession, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -310,9 +306,9 @@ public class MovieDetailsFragment extends Fragment {
 
     }
 
-    private void rate()  {
+    private void rate() {
 
-        StringRequest strReq = new StringRequest(Request.Method.POST,"https://api.themoviedb.org/3/movie/"+Context.ITEM_MOVIE.getId()+"/rating?guest_session_id="+session_id+"&api_key=7c408d3e3e9aec97d01604333744b592", new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, "https://api.themoviedb.org/3/movie/" + Context.ITEM_MOVIE.getId() + "/rating?guest_session_id=" + session_id + "&api_key=7c408d3e3e9aec97d01604333744b592", new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -321,7 +317,7 @@ public class MovieDetailsFragment extends Fragment {
 
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    Toast.makeText(getContext(),jObj.getString("status_message"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), jObj.getString("status_message"), Toast.LENGTH_LONG).show();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -354,7 +350,6 @@ public class MovieDetailsFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(strReq);
 
 
-
     }
 
     private void makeJsonObjectReviewRequest() {
@@ -375,13 +370,13 @@ public class MovieDetailsFragment extends Fragment {
                     for (int i = 0; i < results.length(); i++) {
 
                         JSONObject cast = (JSONObject) results.get(i);
-                        Review review =new Review(cast.getString("id"), cast.getString("author"), cast.getString("content"));
+                        Review review = new Review(cast.getString("id"), cast.getString("author"), cast.getString("content"));
 
                         dataSource.add(review);
 
                     }
-                    listReview=dataSource;
-                    reviewList.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item,listReview));
+                    listReview = dataSource;
+                    reviewList.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReview));
 
 
                 } catch (JSONException e) {
@@ -406,6 +401,7 @@ public class MovieDetailsFragment extends Fragment {
         jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
+
     private void showDialog() {
         if (!pDialog.isShowing())
             pDialog.show();

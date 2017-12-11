@@ -73,7 +73,8 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         // loading album cover using Glide library
         Glide.with(mContext).load(movie.getBackdrop_path())
                 .asBitmap()
-                .skipMemoryCache( true ).into(holder.thumbnail);
+                .skipMemoryCache( true )
+                .into(holder.thumbnail);
     }
 
 
