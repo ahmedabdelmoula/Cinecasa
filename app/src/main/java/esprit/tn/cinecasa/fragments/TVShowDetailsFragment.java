@@ -1,6 +1,7 @@
 package esprit.tn.cinecasa.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +23,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.squareup.picasso.Picasso;
+import com.yinglan.shadowimageview.ShadowImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +38,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.datatype.Duration;
+
 import esprit.tn.cinecasa.R;
 import esprit.tn.cinecasa.adapters.CastAdapter;
 import esprit.tn.cinecasa.entities.Cast;
 import esprit.tn.cinecasa.utils.AppController;
+import esprit.tn.cinecasa.utils.AutoResizeTextView;
 import esprit.tn.cinecasa.utils.Context;
-
 
 /**
  * Created by ahmed on 18-Nov-17.
@@ -48,45 +56,79 @@ public class TVShowDetailsFragment extends Fragment {
     private RecyclerView recyclerView;
     private CastAdapter castadapter;
     private List<Cast> castList;
-    Fragment fragment = this;
-    EditText txtratevalue;
+    Fragment fragment=this;
+    RatingBar txtratevalue;
+    ShadowImageView ivposter;
+    AutoResizeTextView txttitle;
     Button btrate;
-    ImageView ivposter;
-    TextView txtname, txtvote_count, txtvote_average, txtpopularity, txtoriginal_name, txtoverview, txtfirst_air_date;
-    private String urlSession = "https://api.themoviedb.org/3/authentication/guest_session/new?api_key=7c408d3e3e9aec97d01604333744b592";
+    TextView txtname,txtvote_count,txtvote_average,txtpopularity,txtoriginal_name,txtoverview,txtfirst_air_date;
+    private String urlJsongetRated="http://idol-design.com/Cinecasa/Scripts/SelectRatedByUserUid.php?uid_user="+Context.CURRENT_USER.getUid()+"&type=tv";
+    String months[] = {"January", "February", "March", "April",
+            "May", "June", "July", "August", "September",
+            "October", "November", "December"};
+    private String urlSession="https://api.themoviedb.org/3/authentication/guest_session/new?api_key=7c408d3e3e9aec97d01604333744b592";
     private String urlJsonCast = "https://api.themoviedb.org/3/tv/";
-    private String urlJsonCastPart2 = "/credits?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
+    private String urlJsonCastPart2="/credits?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private static String TAG = TVShowDetailsFragment.class.getSimpleName();
     private ProgressDialog pDialog;
     String session_id;
-
+    List<String> dataSource = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tvshowdetails, container, false);
-        urlJsonCast = urlJsonCast + Context.ITEM_TV_SHOW.getId() + urlJsonCastPart2;
+
+        ImageView shadow = (ImageView) view.findViewById(R.id.shadow);
+        Glide
+                .with(getContext())
+                .load(R.drawable.shadow)
+                .into(shadow);
+
+        urlJsonCast=urlJsonCast+ Context.ITEM_TV_SHOW.getId()+urlJsonCastPart2;
         makeJsonObjectCastRequest();
         pDialog = new ProgressDialog(this.getActivity());
         pDialog.setCancelable(false);
-        txtratevalue = (EditText) view.findViewById(R.id.ratevalue);
+        txtratevalue = (RatingBar) view.findViewById(R.id.ratevalue);
         btrate = (Button) view.findViewById(R.id.btrate);
+        getRated();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         txtname = (TextView) view.findViewById(R.id.txtname);
         txtvote_count = (TextView) view.findViewById(R.id.txtvote_count);
         txtvote_average = (TextView) view.findViewById(R.id.txtvote_average);
         txtpopularity = (TextView) view.findViewById(R.id.txtpopularity);
-        txtoriginal_name = (TextView) view.findViewById(R.id.txtoriginal_name);
         txtoverview = (TextView) view.findViewById(R.id.txtoverview);
         txtfirst_air_date = (TextView) view.findViewById(R.id.txtfirst_air_date);
-        ivposter = (ImageView) view.findViewById(R.id.ivposter);
+        ivposter = (ShadowImageView) view.findViewById(R.id.ivposter);
 
-        txtname.setText("Name : " + Context.ITEM_TV_SHOW.getName());
-        txtvote_count.setText("Vote Count : " + Context.ITEM_TV_SHOW.getVote_count());
-        txtvote_average.setText("Vote Average : " + Context.ITEM_TV_SHOW.getVote_average().toString());
-        txtpopularity.setText("Popularity : " + Context.ITEM_TV_SHOW.getPopularity().toString());
-        txtoriginal_name.setText("Original Title : " + Context.ITEM_TV_SHOW.getOriginal_name());
-        txtfirst_air_date.setText("Release Date : " + Context.ITEM_TV_SHOW.getFirst_air_date());
-        txtoverview.setText("Story : " + Context.ITEM_TV_SHOW.getOverview());
-        Picasso.with(getActivity()).load(Context.ITEM_TV_SHOW.getPoster_path()).into(ivposter);
+        txtname.setText(Context.ITEM_TV_SHOW.getName());
+        txtvote_count.setText("Vote Count : "+ Context.ITEM_TV_SHOW.getVote_count());
+        txtvote_average.setText(Context.ITEM_TV_SHOW.getVote_average().toString());
+
+        try {
+
+            String date = Context.ITEM_TV_SHOW.getFirst_air_date();
+            String[] splitted = date.split("-");
+            txtfirst_air_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1])] + " " + splitted[0]);
+        } catch (Exception e) {
+            txtfirst_air_date.setText(Context.ITEM_MOVIE.getRelease_date());
+        }
+
+        txtfirst_air_date.setText(Context.ITEM_TV_SHOW.getFirst_air_date());
+        txtoverview.setText(Context.ITEM_TV_SHOW.getOverview());
+//        Picasso.with(getActivity()).load(Context.ITEM_TV_SHOW.getPoster_path()).into(ivposter);
+
+        txtoverview.setText(Context.ITEM_TV_SHOW.getOverview());
+
+        Glide.with(getContext())
+                .load(Context.ITEM_TV_SHOW.getPoster_path())    // you can pass url too
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        // you can do something with loaded bitmap here
+
+                        ivposter.setImageBitmap(resource);
+                    }
+                });
         btrate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 getSession();
@@ -114,13 +156,13 @@ public class TVShowDetailsFragment extends Fragment {
                     for (int i = 0; i < results.length(); i++) {
 
                         JSONObject cast = (JSONObject) results.get(i);
-                        Cast cast1 = new Cast(cast.getString("character"), cast.getString("credit_id"), cast.getInt("gender"), cast.getInt("id"), cast.getString("name"), cast.getInt("order"), "https://image.tmdb.org/t/p/w300" + cast.getString("profile_path"));
+                        Cast cast1=new Cast(cast.getString("character"), cast.getString("credit_id"), cast.getInt("gender"), cast.getInt("id"), cast.getString("name"), cast.getInt("order"), "https://image.tmdb.org/t/p/w300"+cast.getString("profile_path"));
 
                         dataSource.add(cast1);
 
                     }
-                    castList = dataSource;
-                    castadapter = new CastAdapter(getActivity(), castList);
+                    castList=dataSource;
+                    castadapter  = new CastAdapter(getActivity(),castList);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setAdapter(castadapter);
@@ -146,14 +188,13 @@ public class TVShowDetailsFragment extends Fragment {
         });
 
         // Adding request to request queue
-        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
     private void getSession() {
 
 
-        StringRequest strReq = new StringRequest(Request.Method.GET, urlSession, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET,urlSession, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -182,11 +223,13 @@ public class TVShowDetailsFragment extends Fragment {
             }
         });
         AppController.getInstance().addToRequestQueue(strReq);
+
+
     }
 
-    private void rate() {
+    private void rate()  {
 
-        StringRequest strReq = new StringRequest(Request.Method.POST, "https://api.themoviedb.org/3/movie/" + Context.ITEM_MOVIE.getId() + "/rating?guest_session_id=" + session_id + "&api_key=7c408d3e3e9aec97d01604333744b592", new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST,"https://api.themoviedb.org/3/movie/"+Context.ITEM_TV_SHOW.getId()+"/rating?guest_session_id="+session_id+"&api_key=7c408d3e3e9aec97d01604333744b592", new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -195,7 +238,8 @@ public class TVShowDetailsFragment extends Fragment {
 
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    Toast.makeText(getContext(), jObj.getString("status_message"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),jObj.getString("status_message"), Toast.LENGTH_LONG).show();
+                    addRated();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -217,7 +261,9 @@ public class TVShowDetailsFragment extends Fragment {
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<>();
-                params.put("value", txtratevalue.getText().toString());
+                String s=String.valueOf(txtratevalue.getRating());
+                params.put("value", s);
+
 
                 return params;
             }
@@ -225,7 +271,9 @@ public class TVShowDetailsFragment extends Fragment {
         };
 
         // Adding request to request queue
+        strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq);
+
 
 
     }
@@ -238,5 +286,89 @@ public class TVShowDetailsFragment extends Fragment {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    private void getRated() {
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlJsongetRated, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    // Parsing json object response
+
+
+                    JSONArray results = (JSONArray) response.get("rated");
+                    for (int i = 0; i < response.length(); i++) {
+
+                        JSONObject movie = (JSONObject) results.get(i);
+                        Toast.makeText(getContext(),"movie: " +results,Toast.LENGTH_LONG).show();
+                        String idmovie = movie.getString("id_rated");
+
+                        dataSource.add(idmovie);
+
+                        if (dataSource.contains(String.valueOf(Context.ITEM_TV_SHOW.getId())))
+                        {
+                            txtratevalue.setEnabled(false);
+                            btrate.setEnabled(false);
+                        }
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+//                Toast.makeText(getContext(),
+//                        error.getMessage(), Toast.LENGTH_LONG).show();
+                // hide the progress dialog
+                hideDialog();
+            }
+        });
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "hello");
+
+
+    }
+    void addRated(){
+        StringRequest strReq = new StringRequest(Request.Method.GET,"http://idol-design.com/Cinecasa/Scripts/AddRated.php?uid_user="+Context.CURRENT_USER.getUid()+"&id_rated="+String.valueOf((Context.ITEM_TV_SHOW.getId()))+"&type=tv&value="+String.valueOf(txtratevalue.getRating()*2), new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Rate Response: " + response.toString());
+                hideDialog();
+
+
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Rate Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) ;
+
+        // Adding request to request queue
+
+        AppController.getInstance().addToRequestQueue(strReq);
+
+
+
+
     }
 }

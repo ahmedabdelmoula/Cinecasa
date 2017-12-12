@@ -67,5 +67,6 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.github.florent37:viewanimator:1.0.5'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
+    compile 'com.yinglan.shadowimageview:shadowimageview:1.0.4'
 //    compile 'com.github.chathuralakmal:AndroidImagePopup:1.2.1'
 }

@@ -51,7 +51,9 @@ public class UserProfileFragment extends Fragment {
             photoHeader.invalidate();
         }
         TextView txtname = (TextView)view.findViewById(R.id.tvName);
+        TextView txttitle = (TextView)view.findViewById(R.id.tvTitle);
         txtname.setText(Context.CURRENT_USER.getName());
+        txttitle.setText(Context.CURRENT_USER.getEmail());
         ImageView overflow = (ImageView)view.findViewById(R.id.button_overflow);
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override

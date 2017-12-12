@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="5dp"
+    android:orientation="vertical">
+
     <TextView
+        android:id="@+id/reviewAuthor"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:id="@+id/reviewAuthor"/>
+        android:textStyle="bold"
+        android:textSize="15sp" />
+
     <TextView
+        android:id="@+id/Reviewcontent"
+        android:layout_marginTop="-5dp"
+        android:fontFamily="sans-serif-light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:id="@+id/Reviewcontent"/>
+        android:layout_margin="10dp"
+        android:textSize="12sp" />
 </LinearLayout>

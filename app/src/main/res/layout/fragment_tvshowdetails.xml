@@ -1,107 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
     android:id="@+id/container1"
-    android:background="@color/background">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:orientation="vertical">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/shadow"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:orientation="horizontal">
+                android:layout_below="@id/youtube_layout" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="-10dp"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="250dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:orientation="vertical">
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/txtname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    <com.yinglan.shadowimageview.ShadowImageView
+                        android:id="@+id/ivposter"
+                        android:layout_width="190dp"
+                        android:layout_height="250dp"
+                        android:layout_marginLeft="-30dp"
+                        android:gravity="center" />
 
-                    <TextView
-                        android:id="@+id/txtvote_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    <LinearLayout
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-25dp"
+                        android:layout_marginTop="55dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/txtvote_average"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        <esprit.tn.cinecasa.utils.AutoResizeTextView
+                            android:id="@+id/txtname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:maxLines="1"
+                            android:textColor="@android:color/black"
+                            android:textSize="25sp"
+                            android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/txtpopularity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        <TextView
+                            android:id="@+id/txtfirst_air_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="sans-serif-light"
+                            android:text="6.8"
+                            android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/txtoriginal_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="2dp">
 
-                    <TextView
-                        android:id="@+id/txtfirst_air_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                            <ImageButton
+                                android:id="@+id/starr"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/star"
+                                android:scaleType="center" />
 
+                            <TextView
+                                android:id="@+id/txtvote_average"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:fontFamily="sans-serif-light"
+                                android:gravity="center"
+                                android:text="6.8"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtvote_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/txtpopularity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/txtoriginal_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/ivposter"
+
+                <esprit.tn.cinecasa.utils.AutoResizeTextView
+                    android:id="@+id/autoResizeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-5dp"
+                    android:layout_marginTop="-35dp"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="1"
+                    android:text="Cast"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    android:clipToPadding="false"
+                    android:scrollbars="horizontal" />
 
+
+                <esprit.tn.cinecasa.utils.AutoResizeTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="1"
+                    android:text="Rate"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/ratevalue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5" />
+
+                    <Button
+                        android:id="@+id/btrate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rate" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="1"
+                    android:text="Story :    "
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtoverview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="1"
+                    android:text="Reviews :    "
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <ListView
+                    android:id="@+id/listReview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/ratevalue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="rate value" />
-
-                <Button
-                    android:id="@+id/btrate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rate" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/txtoverview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:scrollbars="horizontal" />
-
-
-        </LinearLayout>
-
-
+        </RelativeLayout>
     </ScrollView>
+    <!---->
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_alignParentLeft="true">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="250dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_alignParentLeft="true">-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/txtname"/>-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/txtvote_count"/>-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/txtvote_average"/>-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/txtpopularity"/>-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/txtoriginal_name"/>-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/txtfirst_air_date"/>-->
+
+
+    <!--</LinearLayout>-->
+    <!--<ImageView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/ivposter"-->
+    <!--android:layout_alignParentRight="true"/>-->
+
+
+    <!--</LinearLayout>-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
+    <!--<RatingBar-->
+    <!--android:id="@+id/ratevalue"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:numStars="5"/>-->
+    <!--<Button-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Rate"-->
+    <!--android:id="@+id/btrate"/>-->
+    <!--</LinearLayout>-->
+    <!--<TextView-->
+    <!--android:layout_marginTop="40dp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/txtoverview"/>-->
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/recycler_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:clipToPadding="false"-->
+    <!--android:scrollbars="horizontal" />-->
+
 
 </LinearLayout>

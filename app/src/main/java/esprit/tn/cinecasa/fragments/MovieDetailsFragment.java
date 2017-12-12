@@ -1,6 +1,8 @@
 package esprit.tn.cinecasa.fragments;
 
 import android.app.ProgressDialog;
+import android.databinding.tool.solver.ExecutionPath;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +27,13 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
+import com.yinglan.shadowimageview.ShadowImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +51,7 @@ import esprit.tn.cinecasa.entities.Cast;
 import esprit.tn.cinecasa.entities.Review;
 import esprit.tn.cinecasa.entities.YoutubeVideo;
 import esprit.tn.cinecasa.utils.AppController;
+import esprit.tn.cinecasa.utils.AutoResizeTextView;
 import esprit.tn.cinecasa.utils.Config;
 import esprit.tn.cinecasa.utils.Context;
 
@@ -59,31 +65,44 @@ public class MovieDetailsFragment extends Fragment {
     private List<Cast> castList;
     private List<Review> listReview;
     private View view;
-    RoundedImageView ivposter;
     ListView reviewList;
     Fragment fragment = this;
-    ImageView detailsBG;
-    TextView txttitle, txtvote_count, txtvote_average, txtpopularity, txtoriginal_title, txtoverview, txtrelease_date;
-    EditText txtratevalue;
+    ShadowImageView ivposter;
+    AutoResizeTextView txttitle;
+    TextView txtvote_count, txtvote_average, txtpopularity, txtoriginal_title, txtoverview, txtrelease_date;
+    RatingBar txtratevalue;
     Button btrate;
     String session_id;
     private static final int RECOVERY_DIALOG_REQUEST = 1;
+    List<String> dataSource = new ArrayList<>();
 
     // YouTube player view
     private YouTubePlayerSupportFragment youTubePlayer;
     private String urlJsonObj = "https://api.themoviedb.org/3/movie/";
+    private String urlJsongetRated = "http://idol-design.com/Cinecasa/Scripts/SelectRatedByUserUid.php?uid_user=" + Context.CURRENT_USER.getUid() + "&type=movie";
     private String urlSession = "https://api.themoviedb.org/3/authentication/guest_session/new?api_key=7c408d3e3e9aec97d01604333744b592";
     private String urlJsonObjPart2 = "/videos?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private String urlJsonCast = "https://api.themoviedb.org/3/movie/";
     private String urlJsonCastPart2 = "/credits?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private String urlJsonReview = "https://api.themoviedb.org/3/movie/" + Context.ITEM_MOVIE.getId() + "/reviews?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=1";
     private static String TAG = MovieDetailsFragment.class.getSimpleName();
+    String months[] = {"January", "February", "March", "April",
+            "May", "June", "July", "August", "September",
+            "October", "November", "December"};
     String Youtube_code = "";
     private ProgressDialog pDialog;
+    ShadowImageView shadowImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_moviedetails, container, false);
+
+        ImageView shadow = (ImageView) view.findViewById(R.id.shadow);
+        Glide
+                .with(getContext())
+                .load(R.drawable.shadow)
+                .into(shadow);
+
         castList = new ArrayList<>();
         pDialog = new ProgressDialog(this.getActivity());
         pDialog.setCancelable(false);
@@ -92,35 +111,51 @@ public class MovieDetailsFragment extends Fragment {
         makeJsonObjectRequest();
         makeJsonObjectCastRequest();
         makeJsonObjectReviewRequest();
+//
+//        shadowImageView = (ShadowImageView) view.findViewById(R.id.shadow);
 
-        txtratevalue = (EditText) view.findViewById(R.id.ratevalue);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        txtratevalue = (RatingBar) view.findViewById(R.id.ratevalue);
         btrate = (Button) view.findViewById(R.id.btrate);
-        txttitle = (TextView) view.findViewById(R.id.txttitle);
+        getRated();
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        txttitle = (AutoResizeTextView) view.findViewById(R.id.txttitle);
         txtvote_count = (TextView) view.findViewById(R.id.txtvote_count);
         txtvote_average = (TextView) view.findViewById(R.id.txtvote_average);
         txtpopularity = (TextView) view.findViewById(R.id.txtpopularity);
         txtoriginal_title = (TextView) view.findViewById(R.id.txtoriginal_title);
         txtoverview = (TextView) view.findViewById(R.id.txtoverview);
         txtrelease_date = (TextView) view.findViewById(R.id.txtrelease_date);
-        ivposter = (RoundedImageView) view.findViewById(R.id.ivposter);
-        detailsBG = (ImageView) view.findViewById(R.id.details_bg);
+        ivposter = (ShadowImageView) view.findViewById(R.id.ivposter);
         reviewList = (ListView) view.findViewById(R.id.listReview);
-
-        Glide
-                .with(getContext())
-                .load(R.drawable.details_bg)
-                .into(detailsBG);
 
         txttitle.setText(Context.ITEM_MOVIE.getTitle());
         txtvote_count.setText("Vote Count : " + Context.ITEM_MOVIE.getVote_count());
-        txtvote_average.setText("Vote Average : " + Context.ITEM_MOVIE.getVote_average().toString());
+        txtvote_average.setText(Context.ITEM_MOVIE.getVote_average().toString());
         txtpopularity.setText("Popularity : " + Context.ITEM_MOVIE.getPopularity().toString());
         txtoriginal_title.setText("Original Title : " + Context.ITEM_MOVIE.getOriginal_title());
-        txtrelease_date.setText("Release Date : " + Context.ITEM_MOVIE.getRelease_date());
-        txtoverview.setText("Story : " + Context.ITEM_MOVIE.getOverview());
-        Glide.with(getActivity()).load(Context.ITEM_MOVIE.getPoster_path()).into(ivposter);
 
+        try {
+
+            String date = Context.ITEM_MOVIE.getRelease_date();
+            String[] splitted = date.split("-");
+            txtrelease_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1])] + " " + splitted[0]);
+        } catch (Exception e) {
+            txtrelease_date.setText(Context.ITEM_MOVIE.getRelease_date());
+        }
+        txtoverview.setText(Context.ITEM_MOVIE.getOverview());
+        String url = Context.ITEM_MOVIE.getPoster_path().replace("w150", "w300");
+//        Picasso.with(getActivity()).load(url).into(ivposter);
+        Glide.with(getContext())
+                .load(url)    // you can pass url too
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        // you can do something with loaded bitmap here
+
+                        ivposter.setImageBitmap(resource);
+                    }
+                });
         youTubePlayer = YouTubePlayerSupportFragment.newInstance();
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -212,7 +247,6 @@ public class MovieDetailsFragment extends Fragment {
         });
 
         // Adding request to request queue
-        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
@@ -266,7 +300,6 @@ public class MovieDetailsFragment extends Fragment {
         });
 
         // Adding request to request queue
-        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
@@ -318,6 +351,8 @@ public class MovieDetailsFragment extends Fragment {
                 try {
                     JSONObject jObj = new JSONObject(response);
                     Toast.makeText(getContext(), jObj.getString("status_message"), Toast.LENGTH_LONG).show();
+                    addRated();
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -339,7 +374,8 @@ public class MovieDetailsFragment extends Fragment {
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<>();
-                params.put("value", txtratevalue.getText().toString());
+                String s = String.valueOf(txtratevalue.getRating() * 2);
+                params.put("value", s);
 
                 return params;
             }
@@ -398,7 +434,6 @@ public class MovieDetailsFragment extends Fragment {
         });
 
         // Adding request to request queue
-        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
@@ -410,5 +445,89 @@ public class MovieDetailsFragment extends Fragment {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    private void getRated() {
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlJsongetRated, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    // Parsing json object response
+
+
+                    JSONArray results = (JSONArray) response.get("rated");
+                    for (int i = 0; i < response.length(); i++) {
+
+                        JSONObject movie = (JSONObject) results.get(i);
+//                        Toast.makeText(getContext(),"movie: " +results,Toast.LENGTH_LONG).show();
+                        String idmovie = movie.getString("id_rated");
+
+                        dataSource.add(idmovie);
+
+                        if (dataSource.contains(String.valueOf(Context.ITEM_MOVIE.getId()))) {
+                            txtratevalue.setEnabled(false);
+                            btrate.setEnabled(false);
+                        }
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+//                Toast.makeText(getContext(),
+//                        error.getMessage(), Toast.LENGTH_LONG).show();
+                // hide the progress dialog
+                hideDialog();
+            }
+        });
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "hello");
+
+
+    }
+
+    void addRated() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, "http://idol-design.com/Cinecasa/Scripts/AddRated.php?uid_user=" + Context.CURRENT_USER.getUid() + "&id_rated=" + String.valueOf((Context.ITEM_MOVIE.getId())) + "&type=movie&value=" + String.valueOf(txtratevalue.getRating() * 2), new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Rate Response: " + response.toString());
+                hideDialog();
+
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Rate Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+
+        };
+
+        // Adding request to request queue
+
+        AppController.getInstance().addToRequestQueue(strReq);
+
+
     }
 }

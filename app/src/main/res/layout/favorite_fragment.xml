@@ -1,71 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Favorite Actors"
+        android:textColor="@color/colorSecondary"
+        android:textSize="40dp" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:orientation="vertical"
-        tools:context=".fragments.FavoriteFragment">
+        android:layout_below="@id/type">
 
-        <android.support.design.widget.AppBarLayout
+
+        <com.ogaclejapan.smarttablayout.SmartTabLayout
+            android:id="@+id/tabs"
+            android:elevation="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            app:stl_clickable="true"
+            app:stl_defaultTabBackground="?attr/selectableItemBackground"
+            app:stl_defaultTabTextAllCaps="true"
+            app:stl_defaultTabTextColor="#FC000000"
+            app:stl_defaultTabTextHorizontalPadding="16dp"
+            app:stl_defaultTabTextMinWidth="0dp"
+            app:stl_defaultTabTextSize="12sp"
+            app:stl_distributeEvenly="false"
+            app:stl_dividerColor="#4D000000"
+            app:stl_dividerThickness="0dp"
+            app:stl_drawDecorationAfterTab="false"
+            app:stl_indicatorAlwaysAtStart="true"
+            app:stl_indicatorAlwaysInCenter="false"
+            app:stl_indicatorColor="#40C4FF"
+            app:stl_indicatorCornerRadius="2dp"
+            app:stl_indicatorGravity="bottom"
+            app:stl_indicatorInFront="false"
+            app:stl_indicatorInterpolation="smart"
+            app:stl_indicatorThickness="0dp"
+            app:stl_indicatorWidth="auto"
+            app:stl_indicatorWithoutPadding="false"
+            app:stl_overlineColor="#4D000000"
+            app:stl_overlineThickness="0dp"
+            app:stl_titleOffset="24dp"
+            app:stl_underlineColor="#4D000000"
+            app:stl_underlineThickness="0dp" />
 
-
-        </android.support.design.widget.AppBarLayout>
-
-
-        <FrameLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_marginTop="-20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="108dp"
-                android:overScrollMode="never" />
-
-            <com.ogaclejapan.smarttablayout.SmartTabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                app:stl_clickable="true"
-                app:stl_defaultTabBackground="?attr/selectableItemBackground"
-                app:stl_defaultTabTextAllCaps="true"
-                app:stl_defaultTabTextColor="#FC000000"
-                app:stl_defaultTabTextHorizontalPadding="16dp"
-                app:stl_defaultTabTextMinWidth="0dp"
-                app:stl_defaultTabTextSize="12sp"
-                app:stl_distributeEvenly="false"
-                app:stl_dividerColor="#4D000000"
-                app:stl_dividerThickness="0dp"
-                app:stl_drawDecorationAfterTab="false"
-                app:stl_indicatorAlwaysInCenter="false"
-                app:stl_indicatorColor="#40C4FF"
-                app:stl_indicatorCornerRadius="2dp"
-                app:stl_indicatorGravity="bottom"
-                app:stl_indicatorInFront="false"
-                app:stl_indicatorInterpolation="smart"
-                app:stl_indicatorThickness="0dp"
-                app:stl_indicatorWidth="auto"
-                app:stl_indicatorWithoutPadding="false"
-                app:stl_overlineColor="#4D000000"
-                app:stl_overlineThickness="0dp"
-                app:stl_titleOffset="24dp"
-                app:stl_underlineColor="#4D000000"
-                app:stl_indicatorAlwaysAtStart="true"
-                app:stl_underlineThickness="0dp" />
-
-
-        </FrameLayout>
-    </android.support.design.widget.CoordinatorLayout>
-</layout>
+            android:overScrollMode="never" />
+    </LinearLayout>
+</RelativeLayout>

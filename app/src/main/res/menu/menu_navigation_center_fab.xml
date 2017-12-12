@@ -20,6 +20,6 @@
         android:title="Favorite" />
     <item
         android:id="@+id/i_visibility"
-        android:icon="@drawable/ic_settings_work_tool_24dp"
+        android:icon="@drawable/ic_user_24dp"
         android:title="Settings" />
 </menu>

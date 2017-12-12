@@ -6,6 +6,7 @@ package esprit.tn.cinecasa.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.squareup.picasso.Picasso;
+import com.yinglan.shadowimageview.ShadowImageView;
 
 import java.util.List;
 
 import esprit.tn.cinecasa.DetailsActivity;
 import esprit.tn.cinecasa.R;
 import esprit.tn.cinecasa.entities.Cast;
+import esprit.tn.cinecasa.utils.AutoResizeTextView;
 
 /**
  * Created by Ravi Tamada on 18/05/16.
@@ -31,14 +36,14 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.MyViewHolder> 
     private List<Cast> castList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, character;
-        public ImageView thumbnail, overflow;
+        public AutoResizeTextView title, character;
+        public ShadowImageView thumbnail, overflow;
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            character = (TextView) view.findViewById(R.id.character);
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            title = (AutoResizeTextView) view.findViewById(R.id.title);
+            character = (AutoResizeTextView) view.findViewById(R.id.character);
+            thumbnail = (ShadowImageView) view.findViewById(R.id.thumbnail);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,53 +83,22 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Cast cast = castList.get(position);
         holder.title.setText(cast.getName());
-        holder.character.setText("As : "+cast.getCharacter());
+        holder.character.setText(cast.getCharacter());
 
         // loading album cover using Glide library
-        Picasso.with(mContext).load(cast.getProfile_path()).into(holder.thumbnail);
 
-       /** holder.overflow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //showPopupMenu(holder.overflow);
-            }
-        });**/
+        Glide.with(mContext)
+                .load(cast.getProfile_path())    // you can pass url too
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        // you can do something with loaded bitmap here
+
+                        holder.thumbnail.setImageBitmap(resource);
+                    }
+                });
     }
-
-    /**
-     * Showing popup menu when tapping on 3 dots
-     */
-   /** private void showPopupMenu(View view) {
-        // inflate menu
-        PopupMenu popup = new PopupMenu(mContext, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_album, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
-        popup.show();
-    }
-
-
-     // Click listener for popup menu items
-
-    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-
-        public MyMenuItemClickListener() {
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.action_add_favourite:
-                    Toast.makeText(mContext, "Add to favourite", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.action_play_next:
-                    Toast.makeText(mContext, "Play next", Toast.LENGTH_SHORT).show();
-                    return true;
-                default:
-            }
-            return false;
-        }
-    }**/
 
     @Override
     public int getItemCount() {

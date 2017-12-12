@@ -63,6 +63,7 @@ public class TVShowsFragment extends Fragment {
     List<TVShow> dataSource;
     RoundedImageView big_img;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +99,7 @@ public class TVShowsFragment extends Fragment {
                 (RecyclerView) view.findViewById(R.id.tv_shows_recycler_view);
 
 //        layoutManager = new LinearLayoutManager(getContext());
-        layoutManager = new GridLayoutManager(getContext(), 2);
+        layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new TVShowsRecyclerAdapter();
@@ -135,7 +136,7 @@ public class TVShowsFragment extends Fragment {
                         Double vote_average = tvshow.getDouble("vote_average");
                         String name = tvshow.getString("name");
                         Double popularity = tvshow.getDouble("popularity");
-                        String poster_path = ("https://image.tmdb.org/t/p/w150" + tvshow.getString("poster_path"));
+                        String poster_path = "https://image.tmdb.org/t/p/w300" + tvshow.getString("poster_path");
                         String original_language = tvshow.getString("original_language");
                         String original_name = tvshow.getString("original_name");
                         String genre_ids = tvshow.getString("genre_ids");
@@ -144,7 +145,21 @@ public class TVShowsFragment extends Fragment {
                         String overview = tvshow.getString("overview");
                         String first_air_date = tvshow.getString("first_air_date");
 
-                        final TVShow tvshow1 = new TVShow(genre_ids, original_name, name, popularity, origin_country, vote_count, first_air_date, backdrop_path, original_language, id, vote_average, overview, poster_path);
+                        final TVShow tvshow1 = new TVShow(genre_ids,
+                                original_name,
+                                name,
+                                popularity,
+                                origin_country,
+                                vote_count,
+                                first_air_date,
+                                backdrop_path,
+                                original_language,
+                                id,
+                                vote_average,
+                                overview,
+                                poster_path);
+                        tvshow1.setOverview(overview);
+                        tvshow1.setPoster_path(poster_path);
                         tvshow1.setBackdrop_path(backdrop_path);
 
                         if (i == 1) {

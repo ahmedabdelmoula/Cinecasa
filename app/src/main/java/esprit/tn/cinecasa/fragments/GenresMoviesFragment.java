@@ -60,11 +60,11 @@ public class GenresMoviesFragment extends Fragment {
         String urlJson = "https://api.themoviedb.org/3/discover/movie?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=28";
 
         hashMap = new LinkedHashMap<>();
-        hashMap.put("12", R.id.recycler_view_Adventure);
+        hashMap.put("10749", R.id.recycler_view_Romance);
         hashMap.put("16", R.id.recycler_view_Animation);
+        hashMap.put("12", R.id.recycler_view_Adventure);
         hashMap.put("35", R.id.recycler_view_Comedy);
         hashMap.put("27", R.id.recycler_view_Horror);
-        hashMap.put("10749", R.id.recycler_view_Romance);
         hashMap.put("878", R.id.recycler_view_Science_Fiction);
         makeJsonObjectRequest(urlJson);
         return view;

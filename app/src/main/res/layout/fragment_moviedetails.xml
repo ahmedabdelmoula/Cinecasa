@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,91 +18,107 @@
             <FrameLayout
                 android:id="@+id/youtube_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="160dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:elevation="15dp"
                 android:visibility="visible" />
 
             <ImageView
-                android:id="@+id/details_bg"
+                android:id="@+id/shadow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:scaleType="fitXY" />
+                android:layout_below="@id/youtube_layout" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/youtube_layout"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="-55dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="-10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal">
 
-                    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/card_view"
-                        android:layout_width="120dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:clickable="false"
-                        android:foreground="?selectableItemBackground"
-                        card_view:cardCornerRadius="12dp"
-                        card_view:cardElevation="5dp"
-                        card_view:cardPreventCornerOverlap="false">
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/ivposter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:adjustViewBounds="true"
-                            card_view:riv_corner_radius="12dp" />
-                    </android.support.v7.widget.CardView>
+                    <com.yinglan.shadowimageview.ShadowImageView
+                        android:id="@+id/ivposter"
+                        android:layout_width="190dp"
+                        android:layout_height="250dp"
+                        android:layout_marginLeft="-30dp"
+                        android:gravity="center" />
 
                     <LinearLayout
                         android:layout_width="250dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="28dp"
+                        android:layout_marginLeft="-25dp"
+                        android:layout_marginTop="55dp"
                         android:orientation="vertical">
 
-                        <TextView
+                        <esprit.tn.cinecasa.utils.AutoResizeTextView
                             android:id="@+id/txttitle"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="13dp"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="20dp" />
-
-                        <TextView
-                            android:id="@+id/txtvote_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:id="@+id/txtvote_average"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:id="@+id/txtpopularity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:id="@+id/txtoriginal_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:fontFamily="sans-serif-light"
+                            android:maxLines="1"
+                            android:textColor="@android:color/black"
+                            android:textSize="25sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/txtrelease_date"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="sans-serif-light"
+                            android:text="6.8"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="2dp">
+
+                            <ImageButton
+                                android:id="@+id/starr"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/star"
+                                android:scaleType="center" />
+
+                            <TextView
+                                android:id="@+id/txtvote_average"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:fontFamily="sans-serif-light"
+                                android:gravity="center"
+                                android:text="6.8"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtvote_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/txtpopularity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/txtoriginal_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
 
 
                     </LinearLayout>
@@ -110,29 +126,19 @@
                 </LinearLayout>
 
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+
+                <esprit.tn.cinecasa.utils.AutoResizeTextView
+                    android:id="@+id/autoResizeTextView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/ratevalue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="rate value" />
-
-                    <Button
-                        android:id="@+id/btrate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rate" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/txtoverview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp" />
+                    android:layout_marginBottom="-5dp"
+                    android:layout_marginTop="-35dp"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="1"
+                    android:text="Cast"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
@@ -141,10 +147,66 @@
                     android:clipToPadding="false"
                     android:scrollbars="horizontal" />
 
+
+                <esprit.tn.cinecasa.utils.AutoResizeTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="1"
+                    android:text="Rate"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/ratevalue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5" />
+
+                    <Button
+                        android:id="@+id/btrate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rate" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="1"
+                    android:text="Story :    "
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtoverview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="sans-serif-light"
+                    android:maxLines="1"
+                    android:text="Reviews :    "
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
                 <ListView
                     android:id="@+id/listReview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></ListView>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

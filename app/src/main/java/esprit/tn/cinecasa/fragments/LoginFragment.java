@@ -150,6 +150,7 @@ public class LoginFragment extends Fragment {
         btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
+                Context.registerSelected  = true;
                 Intent i = new Intent(getContext(), RegisterActivity.class);
                 startActivity(i);
                 getActivity().finish();
@@ -179,7 +180,9 @@ public class LoginFragment extends Fragment {
                 hideDialog();
 
                 try {
+                    System.out.println("heeeeeey "+response);
                     response = response.substring(10);
+                    System.out.println("heeeeeey "+response);
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
 
@@ -217,6 +220,7 @@ public class LoginFragment extends Fragment {
                     // JSON error
                     e.printStackTrace();
                     Toast.makeText(fragment.getContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    System.out.println("heeeeeey "+e.getMessage());
                 }
 
             }

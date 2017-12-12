@@ -62,6 +62,10 @@ public class RegisterActivity extends AppCompatActivity {
         inputPassword = (EditText) findViewById(R.id.password);
         btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
 
+        if(!Context.registerSelected){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().add(R.id.container, new LoginFragment(), "LoginFragment").commit();
+        }
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);

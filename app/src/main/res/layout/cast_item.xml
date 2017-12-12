@@ -1,54 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="140dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="-35dp"
+    android:layout_marginRight="-35dp"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="@dimen/album_cover_width"
-        android:layout_height="fill_parent"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/card_margin"
-        android:elevation="3dp"
-        card_view:cardCornerRadius="@dimen/card_album_radius">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <com.yinglan.shadowimageview.ShadowImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="140dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="-30dp" />
 
-            <ImageView
-                android:id="@+id/thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/album_cover_height"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitXY" />
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/thumbnail"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:paddingTop="@dimen/album_title_padding"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/album_title" />
-
-            <TextView
-                android:id="@+id/character"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title"
-                android:paddingBottom="@dimen/songs_count_padding_bottom"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:textSize="@dimen/songs_count" />
+        <esprit.tn.cinecasa.utils.AutoResizeTextView
+            android:id="@+id/title"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-50dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingLeft="@dimen/album_title_padding"
+            android:paddingRight="@dimen/album_title_padding"
+            android:textColor="@color/black"
+            android:textSize="13dp" />
 
 
+        <esprit.tn.cinecasa.utils.AutoResizeTextView
+            android:id="@+id/character"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/songs_count_padding_bottom"
+            android:paddingLeft="@dimen/album_title_padding"
+            android:paddingRight="@dimen/album_title_padding"
+            android:textColor="@color/dark_gray"
+            android:textSize="11dp" />
 
-        </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
+    </LinearLayout>
 
-</LinearLayout>
+
+</RelativeLayout>

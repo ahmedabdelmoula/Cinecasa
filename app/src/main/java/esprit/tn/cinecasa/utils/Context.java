@@ -29,4 +29,5 @@ public class Context {
     public static Actor ITEM_ACTOR = new Actor();
     public static int ACTOR_ID;
     public static int selected = 0;
+    public static boolean registerSelected = false;
 }
