@@ -247,6 +247,7 @@ public class MovieDetailsFragment extends Fragment {
         });
 
         // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
@@ -300,6 +301,7 @@ public class MovieDetailsFragment extends Fragment {
         });
 
         // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
@@ -334,6 +336,7 @@ public class MovieDetailsFragment extends Fragment {
                 hideDialog();
             }
         });
+        strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq);
 
 
@@ -383,6 +386,7 @@ public class MovieDetailsFragment extends Fragment {
         };
 
         // Adding request to request queue
+        strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq);
 
 
@@ -434,6 +438,7 @@ public class MovieDetailsFragment extends Fragment {
         });
 
         // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
@@ -495,6 +500,7 @@ public class MovieDetailsFragment extends Fragment {
             }
         });
         // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq, "hello");
 
 
@@ -526,6 +532,7 @@ public class MovieDetailsFragment extends Fragment {
 
         // Adding request to request queue
 
+        strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq);
 
 

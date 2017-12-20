@@ -188,6 +188,7 @@ public class TVShowDetailsFragment extends Fragment {
         });
 
         // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
@@ -222,6 +223,7 @@ public class TVShowDetailsFragment extends Fragment {
                 hideDialog();
             }
         });
+        strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq);
 
 
@@ -304,7 +306,6 @@ public class TVShowDetailsFragment extends Fragment {
                     for (int i = 0; i < response.length(); i++) {
 
                         JSONObject movie = (JSONObject) results.get(i);
-                        Toast.makeText(getContext(),"movie: " +results,Toast.LENGTH_LONG).show();
                         String idmovie = movie.getString("id_rated");
 
                         dataSource.add(idmovie);
@@ -337,6 +338,7 @@ public class TVShowDetailsFragment extends Fragment {
             }
         });
         // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq, "hello");
 
 
@@ -365,6 +367,7 @@ public class TVShowDetailsFragment extends Fragment {
 
         // Adding request to request queue
 
+        strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq);
 
 

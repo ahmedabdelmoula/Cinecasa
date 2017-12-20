@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
@@ -10,9 +11,10 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/star"
+        android:textStyle="bold"
         android:fontFamily="sans-serif-light"
         android:text="TOP 10 Romance Movies"
-        android:id="@+id/txtRomance"/>
+        android:id="@+id/txtRomance" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_Romance"
@@ -28,8 +30,9 @@
         android:textSize="20sp"
         android:textColor="@color/star"
         android:fontFamily="sans-serif-light"
+        android:textStyle="bold"
         android:text="TOP 10 Animation Movies"
-        android:id="@+id/txtAnimation"/>
+        android:id="@+id/txtAnimation" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_Animation"
@@ -41,13 +44,14 @@
     <TextView
         android:layout_marginTop="40dp"
         android:layout_width="wrap_content"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/star"
         android:fontFamily="sans-serif-light"
         android:alpha=".8"
         android:text="TOP 10 Adventure Movies"
-        android:id="@+id/txtAdventure"/>
+        android:id="@+id/txtAdventure" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_Adventure"
@@ -61,10 +65,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
+        android:textStyle="bold"
         android:textColor="@color/star"
         android:fontFamily="sans-serif-light"
         android:text="TOP 10 Action Movies"
-        android:id="@+id/txtAction"/>
+        android:id="@+id/txtAction" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_Action"
@@ -80,9 +85,10 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/star"
+        android:textStyle="bold"
         android:fontFamily="sans-serif-light"
         android:text="TOP 10 Comedy Movies"
-        android:id="@+id/txtComedy"/>
+        android:id="@+id/txtComedy" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_Comedy"
@@ -90,15 +96,17 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:scrollbars="horizontal" />
+
     <TextView
         android:layout_marginTop="40dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/star"
+        android:textStyle="bold"
         android:fontFamily="sans-serif-light"
         android:text="TOP 10 Horror Movies"
-        android:id="@+id/txtHorror"/>
+        android:id="@+id/txtHorror" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_Horror"
@@ -106,15 +114,17 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:scrollbars="horizontal" />
+
     <TextView
         android:layout_marginTop="40dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/star"
+        android:textStyle="bold"
         android:fontFamily="sans-serif-light"
         android:text="TOP 10 Science Fiction Movies"
-        android:id="@+id/txtScienceFiction"/>
+        android:id="@+id/txtScienceFiction" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_Science_Fiction"

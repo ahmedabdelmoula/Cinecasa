@@ -6,15 +6,18 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import esprit.tn.cinecasa.CenterFabActivity;
 import esprit.tn.cinecasa.R;
 import esprit.tn.cinecasa.RegisterActivity;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreen extends AppCompatActivity implements Animation.AnimationListener {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 500;
+    private static int SPLASH_TIME_OUT = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,13 @@ public class SplashScreen extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         getSupportActionBar().hide();
+        ImageView imgPoster = (ImageView) findViewById(R.id.imgLogo);
+        Animation animZoomOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom_in);
+        Animation animZoomOut1 = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.move);
+        animZoomOut.setAnimationListener(this);
+        animZoomOut1.setAnimationListener(this);
+        imgPoster.startAnimation(animZoomOut);
+
 
         new Handler().postDelayed(new Runnable() {
 
@@ -45,4 +55,18 @@ public class SplashScreen extends AppCompatActivity {
         }, SPLASH_TIME_OUT);
     }
 
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
+    }
 }

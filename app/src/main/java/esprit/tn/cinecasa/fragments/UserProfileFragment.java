@@ -93,13 +93,6 @@ public class UserProfileFragment extends Fragment {
             /* Redraw the view to show the translation */
             photoHeader.invalidate();
         }
-<<<<<<< HEAD
-        TextView txtname = (TextView)view.findViewById(R.id.tvName);
-        TextView txttitle = (TextView)view.findViewById(R.id.tvTitle);
-        txtname.setText(Context.CURRENT_USER.getName());
-        txttitle.setText(Context.CURRENT_USER.getEmail());
-        ImageView overflow = (ImageView)view.findViewById(R.id.button_overflow);
-=======
         profilePicture = (CircleImageView) view.findViewById(R.id.civProfilePic);
         TextView txtname = (TextView) view.findViewById(R.id.tvName);
         TextView txttitle = (TextView) view.findViewById(R.id.tvTitle);
@@ -111,7 +104,6 @@ public class UserProfileFragment extends Fragment {
 
 
         ImageView overflow = (ImageView) view.findViewById(R.id.logout);
->>>>>>> a0ca49b8db0d46d3d92b0af49d56b1c5ce974b0c
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -263,7 +255,7 @@ public class UserProfileFragment extends Fragment {
                             String poster_path = ("https://image.tmdb.org/t/p/w300" + response.getString("poster_path"));
                             String original_language = response.getString("original_language");
                             String original_name = response.getString("original_name");
-                            String genre_ids = response.getString("genre_ids");
+                            String genre_ids = response.getString("genres");
                             String origin_country = response.getString("origin_country");
                             String backdrop_path = ("https://image.tmdb.org/t/p/w300" + response.getString("backdrop_path"));
                             String overview = response.getString("overview");
