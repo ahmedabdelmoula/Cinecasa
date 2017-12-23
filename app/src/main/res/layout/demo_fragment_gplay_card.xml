@@ -28,10 +28,10 @@
         android:id="@+id/type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
         android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:fontFamily="sans-serif-light"
         android:textColor="@color/colorSecondary"
         android:textSize="40dp" />
 
@@ -39,7 +39,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/type">
+        android:layout_below="@id/type"
+        android:layout_marginTop="27dp">
 
         <FrameLayout
             android:layout_width="match_parent"

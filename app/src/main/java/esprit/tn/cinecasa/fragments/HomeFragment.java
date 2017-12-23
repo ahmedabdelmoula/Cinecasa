@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class HomeFragment extends Fragment {
 
         ViewPager vpChild = (ViewPager) view.findViewById(R.id.vpChild);
 
-        vpChild.setOffscreenPageLimit(0);
+        vpChild.setOffscreenPageLimit(4);
 
         fragments = new ArrayList<>(4);
 
@@ -44,6 +46,9 @@ public class HomeFragment extends Fragment {
 
         adapter = new VpAdapter(getChildFragmentManager(), fragments);
         vpChild.setAdapter(adapter);
+
+        SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
+        viewPagerTab.setViewPager(vpChild);
 
         return view;
     }
