@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
             // User is already logged in. Take him to main activity
             String UID = session.getUID();
             Context.CURRENT_USER = db.getUserDetails(UID);
-//            Context.CONNECTED_USER = db.getUserDetails(UID);
+            Context.CONNECTED_USER = db.getUserDetails(UID);
             Intent intent = new Intent(RegisterActivity.this, CenterFabActivity.class);
             startActivity(intent);
             finish();
@@ -172,11 +172,10 @@ public class RegisterActivity extends AppCompatActivity {
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
-                        String created_at = user
-                                .getString("created_at");
+                        String created_at = user.getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(id, name, email, password, uid, created_at);
+                        db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
                         // Launch login fragment

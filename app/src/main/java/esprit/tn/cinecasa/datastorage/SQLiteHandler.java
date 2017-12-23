@@ -35,6 +35,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_UID = "uid";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_CREATED_AT = "createdat";
+    private static final String KEY_SALT = "salt";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,8 +45,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_PASSWORD + " TEXT UNIQUE," + KEY_UID + " TEXT," + KEY_CREATED_AT + ")";
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_NAME + " TEXT,"
+                + KEY_EMAIL + " TEXT UNIQUE,"
+                + KEY_PASSWORD + " TEXT UNIQUE,"
+                + KEY_UID + " TEXT,"
+                + KEY_SALT + " TEXT,"
+                + KEY_CREATED_AT + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -64,7 +70,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(int id, String name, String email,String password, String uid, String created_at) {
+    public void addUser(int id, String name, String email,String password, String uid, String created_at, String salt) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -73,6 +79,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put(KEY_EMAIL, email); // Email
         values.put(KEY_PASSWORD, password); // Email
         values.put(KEY_UID, uid); // Email
+        values.put(KEY_SALT, salt); // Email
         values.put(KEY_CREATED_AT, created_at); // Email
 
         // Inserting Row
@@ -94,11 +101,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
+            user.setId(cursor.getInt(0));
             user.setName(cursor.getString(1));
             user.setEmail(cursor.getString(2));
             user.setPassword(cursor.getString(3));
             user.setUid(cursor.getString(4));
-            user.setCreated_at(cursor.getString(5));
+            user.setSalt(cursor.getString(5));
+            user.setCreated_at(cursor.getString(6));
         }
         cursor.close();
         db.close();
@@ -115,6 +124,17 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
         db.delete(TABLE_USER, null, null);
+        db.close();
+
+        Log.d(TAG, "Deleted all user info from sqlite");
+    }
+
+    public void deleteUser(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete All Rows
+        db.delete(TABLE_USER,
+                KEY_ID+"="+id,
+                null);
         db.close();
 
         Log.d(TAG, "Deleted all user info from sqlite");

@@ -180,9 +180,7 @@ public class LoginFragment extends Fragment {
                 hideDialog();
 
                 try {
-                    System.out.println("heeeeeey "+response);
                     response = response.substring(10);
-                    System.out.println("heeeeeey "+response);
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
 
@@ -202,8 +200,8 @@ public class LoginFragment extends Fragment {
                         String created_at = user.getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(id, name, email, password, uid, created_at);
-//                        Context.CURRENT_USER = db.getUserDetails(uid);
+                        db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));
+                        Context.CURRENT_USER = db.getUserDetails(uid);
                         Context.CONNECTED_USER = db.getUserDetails(uid);
                         // Launch main activity
                         Intent intent = new Intent(fragment.getActivity(),
@@ -220,7 +218,6 @@ public class LoginFragment extends Fragment {
                     // JSON error
                     e.printStackTrace();
                     Toast.makeText(fragment.getContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    System.out.println("heeeeeey "+e.getMessage());
                 }
 
             }
