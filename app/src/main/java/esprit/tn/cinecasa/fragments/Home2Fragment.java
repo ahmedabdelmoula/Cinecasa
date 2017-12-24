@@ -25,7 +25,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
+import com.hanks.htextview.base.HTextView;
+import com.hanks.htextview.scale.ScaleTextView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -61,10 +64,12 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
     ListView listView;
     CardView cardView0;
     RecyclerView recyclerView;
+    RecyclerViewHeader recyclerViewHeader;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter adapter;
     List<Movie> dataSource;
     RoundedImageView big_img;
+    ScaleTextView type;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,31 +85,19 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
 
         View view = inflater.inflate(R.layout.demo_fragment_gplay_card, container, false);
 
-        TextView type = (TextView) view.findViewById(R.id.type);
-        if (urlJsonObj.contains("popular"))
-            type.setText("Popular");
-        else if (urlJsonObj.contains("now_playing"))
-            type.setText("Now Playing");
-        else if (urlJsonObj.contains("top_rated"))
-            type.setText("Top Rated");
-        else if (urlJsonObj.contains("upcoming"))
-            type.setText("Upcoming");
-        else if (urlJsonObj.contains("airing_today"))
-            type.setText("Airing Today");
-        else if (urlJsonObj.contains("on_the_air"))
-            type.setText("On The Air");
-
         big_img = (RoundedImageView) view.findViewById(R.id.big_image_movies);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
 
-        recyclerView =
-                (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView =  (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerViewHeader =  (RecyclerViewHeader) view.findViewById(R.id.header);
 
 //        layoutManager = new LinearLayoutManager(getContext());
         layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
+
+        recyclerViewHeader.attachTo(recyclerView);
 
         adapter = new RecyclerAdapter();
 
@@ -116,6 +109,21 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
     }
 
+    public void animateTextview(){
+
+        if (urlJsonObj.contains("popular"))
+            type.animateText("Popular");
+        else if (urlJsonObj.contains("now_playing"))
+            type.animateText("Now Playing");
+        else if (urlJsonObj.contains("top_rated"))
+            type.animateText("Top Rated");
+        else if (urlJsonObj.contains("upcoming"))
+            type.animateText("Upcoming");
+        else if (urlJsonObj.contains("airing_today"))
+            type.animateText("Airing Today");
+        else if (urlJsonObj.contains("on_the_air"))
+            type.animateText("On The Air");
+    }
 
     private void makeJsonObjectRequest() {
 

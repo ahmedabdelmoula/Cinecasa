@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hanks.htextview.scale.ScaleTextView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class HomeFragment extends Fragment {
     private View view;
     private LayoutInflater inflater;
     private ViewGroup container;
+    ScaleTextView type;
 
     @Nullable
     @Override
@@ -35,6 +37,8 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         this.inflater = inflater;
         this.container = container;
+
+        type = (ScaleTextView) view.findViewById(R.id.typeeee);
 
         ViewPager vpChild = (ViewPager) view.findViewById(R.id.vpChild);
 
@@ -50,7 +54,40 @@ public class HomeFragment extends Fragment {
         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(vpChild);
 
+        vpChild.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                switch (position){
+                    case 0: type.animateText("Popular");
+                        break;
+                    case 1: type.animateText("In Theaters");
+                        break;
+                    case 2: type.animateText("Top Rated");
+                        break;
+                    case 3: type.animateText("Upcoming");
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        type.animateText("Popular");
     }
 
     private void initM() {
