@@ -15,6 +15,7 @@ public class User {
     private String password;
     private String created_at;
     private Date updated_at;
+    private String salt;
 
     public User() {
     }
@@ -46,6 +47,14 @@ public class User {
         this.email = email;
         this.email = password;
         this.created_at = created_at;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public int getId() {

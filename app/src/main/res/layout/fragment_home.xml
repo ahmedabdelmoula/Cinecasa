@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <com.hanks.htextview.scale.ScaleTextView
+        android:id="@+id/typeeee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/colorSecondary"
+        android:textSize="40sp" />
+
+    <LinearLayout
+        android:layout_marginTop="-10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <com.ogaclejapan.smarttablayout.SmartTabLayout
+
+            android:id="@+id/viewpagertab"
+            android:layout_width="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
+            app:stl_clickable="false"
+            app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
+            app:stl_dividerColor="@color/transparent"
+            app:stl_dividerThickness="0dp"
+            app:stl_indicatorColor="@color/colorSecondary"
+            app:stl_indicatorCornerRadius="100dp"
+            app:stl_indicatorGravity="center"
+            app:stl_indicatorInterpolation="smart"
+            app:stl_indicatorThickness="10dp"
+            app:stl_underlineColor="@color/transparent"
+            app:stl_underlineThickness="0dp" />
+    </LinearLayout>
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vpChild"

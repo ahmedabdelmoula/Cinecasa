@@ -19,10 +19,11 @@ public class Context {
     }
 
     public static User CURRENT_USER = new User();
+    public static User CONNECTED_USER = new User();
+//    public static User CONNECTED_USER = new User(1);
     public static Movie BIG8_IMG;
     public static boolean SELECTED_TYPE = true;
     public static CenterFabActivity MAIN_ACTIVITY;
-    public static User CONNECTED_USER = new User(1);
     public static Movie ITEM_MOVIE = new Movie();
     public static TVShow ITEM_TV_SHOW = new TVShow();
     public static Actor ITEM_ACTOR = new Actor();
