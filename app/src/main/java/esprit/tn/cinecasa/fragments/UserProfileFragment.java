@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.text.TextDirectionHeuristicCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -91,6 +92,7 @@ public class UserProfileFragment extends Fragment {
     Bitmap bitmap;
     private String updateProfileRequest = "http://idol-design.com/Cinecasa/Connection/update.php?id=" + Context.CONNECTED_USER.getId();
     private String pwd;
+    private TextView nothing;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +120,7 @@ public class UserProfileFragment extends Fragment {
         Button btntv = (Button) view.findViewById(R.id.btnConnect);
         txtname.setText(Context.CURRENT_USER.getName());
         txttitle.setText(Context.CURRENT_USER.getEmail());
-
+        nothing = (TextView) view.findViewById(R.id.nothing);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         editInfos = (LinearLayout) view.findViewById(R.id.edit_infos);
         if (!session.isFirstTime()) {
@@ -202,15 +204,17 @@ public class UserProfileFragment extends Fragment {
         name.setText(Context.CURRENT_USER.getName());
         mail.setText(Context.CURRENT_USER.getEmail());
 
+        done.setVisibility(View.GONE);
+        editInfos.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        getRated("movie");
         btntv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 done.setVisibility(View.GONE);
                 editInfos.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
-                System.out.println("++++++++++++++++++++++++");
                 getRated("movie");
-                System.out.println("++++++++++++++++++++++++");
             }
         });
         btnmovie.setOnClickListener(new View.OnClickListener() {
@@ -403,8 +407,9 @@ public class UserProfileFragment extends Fragment {
             public void onResponse(JSONObject response) {
 
                 try {
-                    System.out.println(response.get("error"));
                     if (!response.getBoolean("error")) {
+                        nothing.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                         JSONObject result = (JSONObject) response.get("result");
 
                         if (result.get("id_rated") instanceof JSONArray)
@@ -428,6 +433,9 @@ public class UserProfileFragment extends Fragment {
 
                         getRated1(type, dataSource);
                     }
+                    else
+                        recyclerView.setVisibility(View.GONE);
+                        nothing.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(),
