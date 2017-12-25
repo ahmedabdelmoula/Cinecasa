@@ -32,12 +32,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-<<<<<<< HEAD
 import com.facebook.login.LoginManager;
-=======
 import com.android.volley.toolbox.StringRequest;
->>>>>>> ccb02ed0ed65c5cd35767fa9525b8cb8e44ca257
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

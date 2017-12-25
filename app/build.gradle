@@ -68,14 +68,10 @@ dependencies {
     compile 'com.github.florent37:viewanimator:1.0.5'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
     compile 'com.yinglan.shadowimageview:shadowimageview:1.0.4'
-<<<<<<< HEAD
     compile 'com.facebook.android:facebook-android-sdk:4.28.0'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.10.0'
-
-=======
     compile "com.hanks:htextview-base:0.1.2"
     compile "com.hanks:htextview-scale:0.1.2"
     compile 'com.bartoszlipinski:recyclerviewheader2:2.0.1'
->>>>>>> ccb02ed0ed65c5cd35767fa9525b8cb8e44ca257
 //    compile 'com.github.chathuralakmal:AndroidImagePopup:1.2.1'
 }

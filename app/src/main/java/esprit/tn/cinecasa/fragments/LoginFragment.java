@@ -279,13 +279,10 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
                         String created_at = user.getString("created_at");
 
                         // Inserting row in users table
-<<<<<<< HEAD
-                        db.addUser(id, name, email, password, uid, created_at);
+                        db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));
                       Context.CURRENT_USER = db.getUserDetails(uid);
-=======
                         db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));
                         Context.CURRENT_USER = db.getUserDetails(uid);
->>>>>>> ccb02ed0ed65c5cd35767fa9525b8cb8e44ca257
                         Context.CONNECTED_USER = db.getUserDetails(uid);
                         // Launch main activity
                         Intent intent = new Intent(fragment.getActivity(),
@@ -410,7 +407,7 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
                                 .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(id, name, email, password, uid, created_at);
+                        db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));
                         Toast.makeText(getContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
                         // Launch login fragment
@@ -495,7 +492,7 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
                         String created_at = user.getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(id, name, email, salt, uid, created_at);
+                        db.addUser(id, name, email, salt, uid, created_at,salt);
                         Context.CURRENT_USER = db.getUserDetails(uid);
 
                         Context.CONNECTED_USER = db.getUserDetails(uid);
