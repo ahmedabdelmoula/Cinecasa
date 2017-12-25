@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.facebook.login.LoginManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -173,6 +174,10 @@ public class UserProfileFragment extends Fragment {
         Intent i = new Intent(getContext(), RegisterActivity.class);
         startActivity(i);
         getActivity().finish();
+        if (Context.FB_LOGIN)
+        {
+            LoginManager.getInstance().logOut();
+        }
     }
 
 

@@ -17,7 +17,7 @@ import esprit.tn.cinecasa.RegisterActivity;
 public class SplashScreen extends AppCompatActivity implements Animation.AnimationListener {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 10000;
+    private static int SPLASH_TIME_OUT = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

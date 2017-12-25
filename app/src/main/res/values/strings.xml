@@ -1,5 +1,8 @@
 <resources>
 
+    <string name="facebook_app_id">379860105760359</string>
+    <string name="fb_login_protocol_scheme">fb379860105760359</string>
+
 
     <string name="title_logo">TRAILER</string>
     <string name="btn_skip_intro">Skip Intro</string>

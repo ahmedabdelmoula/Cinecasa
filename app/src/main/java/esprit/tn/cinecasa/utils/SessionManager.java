@@ -18,6 +18,7 @@ public class SessionManager {
 
     Editor editor;
     Context _context;
+    boolean firsttime = false;
 
     // Shared pref mode
     int PRIVATE_MODE = 0;
@@ -32,6 +33,7 @@ public class SessionManager {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+        firsttime=true;
     }
 
     public void setLogin(boolean isLoggedIn,String uId) {

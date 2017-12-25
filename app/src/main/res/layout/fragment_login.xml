@@ -162,12 +162,11 @@
             android:layout_marginTop="20dp"
             android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/facebook_icon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/facebook_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
-                android:background="@null"
                 android:scaleType="fitXY" />
 
             <ImageButton
