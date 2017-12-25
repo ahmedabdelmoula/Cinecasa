@@ -34,6 +34,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.facebook.login.LoginManager;
 import com.android.volley.toolbox.StringRequest;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,7 +121,24 @@ public class UserProfileFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         editInfos = (LinearLayout) view.findViewById(R.id.edit_infos);
-
+        if (!session.isFirstTime()) {
+            TapTargetView.showFor(getActivity(),
+                    TapTarget.forView(view.findViewById(R.id.btnMessage), "Rated Movies", "From here you can see your rated movies")
+                            // All options below are optional
+                            .outerCircleAlpha(0.1f)            // Specify the alpha amount for the outer circle
+                            .targetCircleColor(R.color.colorGray)   // Specify a color for the target circle
+                            .titleTextSize(20)                  // Specify the size (in sp) of the title text
+                            .descriptionTextSize(10)
+                            .tintTarget(false)  // Specify the size (in sp) of the description text
+                            .targetRadius(60),                  // Specify the target radius (in dp)
+                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                        @Override
+                        public void onTargetClick(TapTargetView view) {
+                            super.onTargetClick(view);      // This call is optional
+                            session.setIntro(true);
+                        }
+                    });
+        }
         ImageView overflow = (ImageView) view.findViewById(R.id.logout);
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +208,9 @@ public class UserProfileFragment extends Fragment {
                 done.setVisibility(View.GONE);
                 editInfos.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+                System.out.println("++++++++++++++++++++++++");
                 getRated("movie");
+                System.out.println("++++++++++++++++++++++++");
             }
         });
         btnmovie.setOnClickListener(new View.OnClickListener() {
@@ -214,9 +236,9 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-
         TextView firstLetter = (TextView) view.findViewById(R.id.first_letter);
-        firstLetter.setText(Context.CONNECTED_USER.getName().substring(0,1));
+
+        firstLetter.setText(Context.CURRENT_USER.getName().substring(0,1));
 
         initListeners();
 
@@ -381,19 +403,31 @@ public class UserProfileFragment extends Fragment {
             public void onResponse(JSONObject response) {
 
                 try {
-                    JSONArray results = (JSONArray) response.get("rated");
-                    dataSource = new ArrayList<>();
-                    for (int i = 0; i < results.length(); i++) {
+                    System.out.println(response.get("error"));
+                    if (!response.getBoolean("error")) {
+                        JSONObject result = (JSONObject) response.get("result");
 
-                        JSONObject rated = (JSONObject) results.get(i);
-                        String idrated = rated.getString("id_rated");
+                        if (result.get("id_rated") instanceof JSONArray)
+                        {
+                        dataSource = new ArrayList<>();
+                        JSONArray ids_rated = (JSONArray) result.get("id_rated");
+                        JSONArray values = (JSONArray) result.get("value");
+                        for (int i = 0; i < ids_rated.length(); i++) {
+                            String idrated = (String) ids_rated.get(i);
+                            dataSource.add(idrated);
+                        }
+                        }
+                        else
+                        {
+                            dataSource = new ArrayList<>();
+                            String id_rated = (String) result.get("id_rated");
+                            String value = (String) result.get("value");
+                                dataSource.add(id_rated);
 
-                        dataSource.add(idrated);
+                        }
 
+                        getRated1(type, dataSource);
                     }
-
-                    getRated1(type, dataSource);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(),

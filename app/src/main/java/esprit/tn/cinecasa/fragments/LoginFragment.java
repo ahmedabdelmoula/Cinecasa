@@ -89,22 +89,7 @@ public class LoginFragment extends Fragment {
         facebookLogin = (LoginButton) view.findViewById(R.id.facebook_login);
         facebookLogin.setFragment(this);
         facebookLogin.setReadPermissions(Arrays.asList("email"));
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(view.findViewById(R.id.facebook_login), "This is a target", "We have the best targets, believe me")
-                        // All options below are optional
-                        .outerCircleAlpha(0.1f)            // Specify the alpha amount for the outer circle
-                        .targetCircleColor(R.color.colorGray)   // Specify a color for the target circle
-                        .titleTextSize(20)                  // Specify the size (in sp) of the title text
-                        .descriptionTextSize(10)
-                        .tintTarget(false)  // Specify the size (in sp) of the description text
-                        .targetRadius(60),                  // Specify the target radius (in dp)
-                new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
-                    @Override
-                    public void onTargetClick(TapTargetView view) {
-                        super.onTargetClick(view);      // This call is optional
-                        System.out.println("ahmed");
-                    }
-                });
+
 
 //        facebook = (ImageButton) view.findViewById(R.id.facebook_icon);
 //        Glide

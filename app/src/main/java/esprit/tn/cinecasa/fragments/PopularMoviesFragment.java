@@ -55,16 +55,6 @@ public class PopularMoviesFragment extends Fragment {
         pDialog.setCancelable(false);
         makeJsonObjectRequest();
         fragment=this;
-        //Action mta3 ki yenzel 3la element fi list
-//        lstMovie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                FragmentManager fragmentManager=fragment.getActivity().getSupportFragmentManager();
-//                fragmentManager.beginTransaction().replace(R.id.container, new MovieDetailsFragment(), "MovieDetailsFragment" ).commit();
-//                Context.ITEM_MOVIE=(Movie)parent.getItemAtPosition(position);
-//
-//            }
-//        });
         return view;
     }
 
