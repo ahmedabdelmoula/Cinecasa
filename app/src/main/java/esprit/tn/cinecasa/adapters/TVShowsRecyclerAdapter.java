@@ -27,6 +27,10 @@ public class TVShowsRecyclerAdapter extends RecyclerView.Adapter<TVShowsRecycler
     static List<TVShow> data ;
     private Context con;
 
+    public TVShowsRecyclerAdapter(List<TVShow> data){
+        this.data = data;
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public RoundedImageView itemImage;
@@ -81,9 +85,5 @@ public class TVShowsRecyclerAdapter extends RecyclerView.Adapter<TVShowsRecycler
     public int getItemCount() {
 //        return 7;
         return data.size();
-    }
-
-    public static void setData(List<TVShow> images){
-        data = images;
     }
 }

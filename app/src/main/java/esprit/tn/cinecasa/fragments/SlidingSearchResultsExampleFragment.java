@@ -1,5 +1,6 @@
 package esprit.tn.cinecasa.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +62,7 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
 
     private String mLastQuery = "";
     private boolean created = true;
+    private View v;
 
     public SlidingSearchResultsExampleFragment() {
         // Required empty public constructor
@@ -88,6 +91,7 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        v = view;
         mSearchView = (FloatingSearchView) view.findViewById(R.id.floating_search_view);
         mSearchResultsList = (RecyclerView) view.findViewById(R.id.search_results_list);
         setupFloatingSearch();
@@ -196,7 +200,7 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
 
                 //set the title of the bar so that when focus is returned a new query begins
                 mSearchView.setSearchBarTitle(mLastQuery);
-
+                hideKeyboardFrom(getContext(), v);
                 //you can also set setSearchText(...) to make keep the query there when not focused and when focus returns
                 //mSearchView.setSearchText(searchSuggestion.getBody());
 
@@ -481,5 +485,11 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+
+    public static void hideKeyboardFrom(android.content.Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

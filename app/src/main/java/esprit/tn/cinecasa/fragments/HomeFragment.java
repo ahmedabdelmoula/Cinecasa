@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
 
         ViewPager vpChild = (ViewPager) view.findViewById(R.id.vpChild);
 
-        vpChild.setOffscreenPageLimit(4);
+        vpChild.setOffscreenPageLimit(5);
 
         fragments = new ArrayList<>(4);
 
@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment {
             public void onPageSelected(int position) {
 
                 switch (position){
-                    case 0: type.animateText("Popular");
+                    case 0: type.animateText("Most Popular");
                         break;
                     case 1: type.animateText("In Theaters");
                         break;
@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        type.animateText("Popular");
+        type.animateText("Most Popular");
     }
 
     private void initM() {

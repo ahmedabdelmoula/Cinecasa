@@ -31,8 +31,12 @@ import esprit.tn.cinecasa.entities.Movie;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    static List<Movie> data;
+    private List<Movie> data;
     private Context con;
+
+    public RecyclerAdapter(List<Movie> data){
+        this.data = data;
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -92,7 +96,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return data.size();
     }
 
-    public static void setData(List<Movie> images) {
+    public void setData(List<Movie> images) {
         data = images;
     }
 }

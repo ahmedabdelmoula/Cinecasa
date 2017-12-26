@@ -138,7 +138,7 @@ public class MovieDetailsFragment extends Fragment {
 
             String date = Context.ITEM_MOVIE.getRelease_date();
             String[] splitted = date.split("-");
-            txtrelease_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1])] + " " + splitted[0]);
+            txtrelease_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1])-1] + " " + splitted[0]);
         } catch (Exception e) {
             txtrelease_date.setText(Context.ITEM_MOVIE.getRelease_date());
         }
@@ -220,14 +220,13 @@ public class MovieDetailsFragment extends Fragment {
                         dataSource.add(youtubeVideo);
 
                     }
-                    Youtube_code = dataSource.get(0).getKey();
+                    if (!dataSource.isEmpty())
+                        Youtube_code = dataSource.get(0).getKey();
                     for (YoutubeVideo y : dataSource) {
                         if (y.getSize().contains("720")) {
                             Youtube_code = y.getKey();
                         }
                     }
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(),

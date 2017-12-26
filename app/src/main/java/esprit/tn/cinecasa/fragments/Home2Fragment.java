@@ -99,7 +99,6 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
 
         recyclerViewHeader.attachTo(recyclerView);
 
-        adapter = new RecyclerAdapter();
 
         makeJsonObjectRequest();
         return view;
@@ -109,21 +108,6 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
     }
 
-    public void animateTextview(){
-
-        if (urlJsonObj.contains("popular"))
-            type.animateText("Popular");
-        else if (urlJsonObj.contains("now_playing"))
-            type.animateText("Now Playing");
-        else if (urlJsonObj.contains("top_rated"))
-            type.animateText("Top Rated");
-        else if (urlJsonObj.contains("upcoming"))
-            type.animateText("Upcoming");
-        else if (urlJsonObj.contains("airing_today"))
-            type.animateText("Airing Today");
-        else if (urlJsonObj.contains("on_the_air"))
-            type.animateText("On The Air");
-    }
 
     private void makeJsonObjectRequest() {
 
@@ -167,7 +151,7 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
                         final Movie movie1 = new Movie(vote_count, id, video, vote_average, title, popularity, poster_path, original_language, original_title, genre_ids, adult, null, overview, release_date);
                         movie1.setBackdrop_path(backdrop_path);
 
-                        if (i == 1) {
+                        if (i == 0) {
                             Glide
                                     .with(getContext())
                                     .load(backdrop_path)
@@ -191,8 +175,7 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
 
                     }
 
-
-                    RecyclerAdapter.setData(dataSourcee);
+                    adapter = new RecyclerAdapter(dataSourcee);
                     recyclerView.setAdapter(adapter);
 
                 } catch (JSONException e) {

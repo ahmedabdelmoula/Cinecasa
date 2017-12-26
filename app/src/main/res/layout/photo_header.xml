@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:id="@+id/first_letter"
+        android:textColor="@color/black"
         android:text="A"
         android:textSize="110dp" />
 

@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import esprit.tn.cinecasa.CenterFabActivity;
 import esprit.tn.cinecasa.DetailsActivity;
 import esprit.tn.cinecasa.R;
 import esprit.tn.cinecasa.adapters.RecyclerAdapter;
@@ -62,6 +64,7 @@ public class TVShowsFragment extends Fragment {
     RecyclerView.Adapter adapter;
     List<TVShow> dataSource;
     RoundedImageView big_img;
+    RecyclerViewHeader recyclerViewHeader;
 
 
     @Override
@@ -78,15 +81,6 @@ public class TVShowsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.tv_shows, container, false);
 
-        TextView type = (TextView) view.findViewById(R.id.tv_type);
-        if (urlJsonObj.contains("popular"))
-            type.setText("Popular");
-        else if (urlJsonObj.contains("top_rated"))
-            type.setText("Top Rated");
-        else if (urlJsonObj.contains("airing_today"))
-            type.setText("Airing Today");
-        else if (urlJsonObj.contains("on_the_air"))
-            type.setText("On The Air");
 
 
 //        cardView0 = (CardView) view.findViewById(R.id.bigTVCard);
@@ -102,7 +96,9 @@ public class TVShowsFragment extends Fragment {
         layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new TVShowsRecyclerAdapter();
+
+        recyclerViewHeader =  (RecyclerViewHeader) view.findViewById(R.id.header);
+        recyclerViewHeader.attachTo(recyclerView);
 
         makeJsonObjectRequest();
         return view;
@@ -162,7 +158,7 @@ public class TVShowsFragment extends Fragment {
                         tvshow1.setPoster_path(poster_path);
                         tvshow1.setBackdrop_path(backdrop_path);
 
-                        if (i == 1) {
+                        if (i == 0) {
                             Glide
                                     .with(getContext())
                                     .load(backdrop_path)
@@ -187,7 +183,7 @@ public class TVShowsFragment extends Fragment {
                     }
 
 
-                    TVShowsRecyclerAdapter.setData(dataSource);
+                    adapter = new TVShowsRecyclerAdapter(dataSource);
                     recyclerView.setAdapter(adapter);
 
                 } catch (JSONException e) {
@@ -197,6 +193,7 @@ public class TVShowsFragment extends Fragment {
                             Toast.LENGTH_LONG).show();
                 }
                 hidepDialog();
+
             }
         }, new Response.ErrorListener() {
 

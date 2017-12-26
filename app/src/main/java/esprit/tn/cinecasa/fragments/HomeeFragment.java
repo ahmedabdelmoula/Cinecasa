@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hanks.htextview.scale.ScaleTextView;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class HomeeFragment extends Fragment {
     private View view;
     private LayoutInflater inflater;
     private ViewGroup container;
+    public ScaleTextView type;
 
     @Nullable
     @Override
@@ -34,8 +38,10 @@ public class HomeeFragment extends Fragment {
         this.inflater = inflater;
         this.container = container;
 
+        type = (ScaleTextView) view.findViewById(R.id.typeeee);
+
         ViewPager vpChild = (ViewPager) view.findViewById(R.id.vpChildd);
-        vpChild.setOffscreenPageLimit(5);
+        vpChild.setOffscreenPageLimit(4);
 
         fragments = new ArrayList<>(4);
 
@@ -44,7 +50,43 @@ public class HomeeFragment extends Fragment {
         adapter = new VpAdapter(getChildFragmentManager(), fragments);
         vpChild.setAdapter(adapter);
 
+        SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
+        viewPagerTab.setViewPager(vpChild);
+
+        vpChild.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                switch (position){
+                    case 0: type.animateText("Most Popular");
+                        break;
+                    case 1: type.animateText("Top Rated");
+                        break;
+                    case 2: type.animateText("Airing Today");
+                        break;
+                    case 3: type.animateText("On The Air");
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        type.animateText("Most Popular");
     }
 
     private void initT() {
