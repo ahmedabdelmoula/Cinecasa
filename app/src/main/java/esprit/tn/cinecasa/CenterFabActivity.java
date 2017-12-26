@@ -20,6 +20,8 @@ import android.view.WindowManager;
 
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -38,6 +40,7 @@ import esprit.tn.cinecasa.fragments.HomeFragment;
 import esprit.tn.cinecasa.fragments.HomeeFragment;
 import esprit.tn.cinecasa.fragments.SlidingSearchResultsExampleFragment;
 import esprit.tn.cinecasa.fragments.UserProfileFragment;
+import esprit.tn.cinecasa.utils.SessionManager;
 
 public class CenterFabActivity extends AppCompatActivity implements BaseExampleFragment.BaseExampleFragmentCallbacks{
     private static final String TAG = CenterFabActivity.class.getSimpleName();
@@ -47,6 +50,7 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
     private Fragment fragHome;
     private Bundle b;
     private static boolean CURRENT_TYPE = true;
+    private SessionManager session;
 
     //collections
     private List<Fragment> fragments;// used for ViewPager adapter
@@ -73,6 +77,25 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
         initEvent();
 
         esprit.tn.cinecasa.utils.Context.MAIN_ACTIVITY = this;
+        session = new SessionManager(getApplicationContext());
+        if (!session.isFirstTime()) {
+            TapTargetView.showFor(this,
+                    TapTarget.forView(findViewById(R.id.bnve), "HOME", "From here you can see your Home")
+                            // All options below are optional
+                            .outerCircleAlpha(0.3f)            // Specify the alpha amount for the outer circle
+                            .targetCircleColor(R.color.colorPrimary)   // Specify a color for the target circle
+                            .titleTextSize(30)                  // Specify the size (in sp) of the title text
+                            .descriptionTextSize(20)
+                            .tintTarget(false)  // Specify the size (in sp) of the description text
+                            .targetRadius(60),                  // Specify the target radius (in dp)
+                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                        @Override
+                        public void onTargetClick(TapTargetView view) {
+                            super.onTargetClick(view);      // This call is optional
+                           // session.setIntro(true);
+                        }
+                    });
+        }
 
     }
 

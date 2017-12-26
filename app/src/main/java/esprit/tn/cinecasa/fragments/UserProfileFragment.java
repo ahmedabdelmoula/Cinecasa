@@ -123,24 +123,7 @@ public class UserProfileFragment extends Fragment {
         nothing = (TextView) view.findViewById(R.id.nothing);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         editInfos = (LinearLayout) view.findViewById(R.id.edit_infos);
-        if (!session.isFirstTime()) {
-            TapTargetView.showFor(getActivity(),
-                    TapTarget.forView(view.findViewById(R.id.btnMessage), "Rated Movies", "From here you can see your rated movies")
-                            // All options below are optional
-                            .outerCircleAlpha(0.1f)            // Specify the alpha amount for the outer circle
-                            .targetCircleColor(R.color.colorGray)   // Specify a color for the target circle
-                            .titleTextSize(20)                  // Specify the size (in sp) of the title text
-                            .descriptionTextSize(10)
-                            .tintTarget(false)  // Specify the size (in sp) of the description text
-                            .targetRadius(60),                  // Specify the target radius (in dp)
-                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
-                        @Override
-                        public void onTargetClick(TapTargetView view) {
-                            super.onTargetClick(view);      // This call is optional
-                            session.setIntro(true);
-                        }
-                    });
-        }
+
         ImageView overflow = (ImageView) view.findViewById(R.id.logout);
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
