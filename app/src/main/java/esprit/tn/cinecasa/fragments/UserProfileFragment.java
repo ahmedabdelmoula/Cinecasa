@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.text.TextDirectionHeuristicCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -32,7 +33,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.facebook.login.LoginManager;
 import com.android.volley.toolbox.StringRequest;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,6 +92,7 @@ public class UserProfileFragment extends Fragment {
     Bitmap bitmap;
     private String updateProfileRequest = "http://idol-design.com/Cinecasa/Connection/update.php?id=" + Context.CONNECTED_USER.getId();
     private String pwd;
+    private TextView nothing;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,10 +120,27 @@ public class UserProfileFragment extends Fragment {
         Button btntv = (Button) view.findViewById(R.id.btnConnect);
         txtname.setText(Context.CURRENT_USER.getName());
         txttitle.setText(Context.CURRENT_USER.getEmail());
-
+        nothing = (TextView) view.findViewById(R.id.nothing);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         editInfos = (LinearLayout) view.findViewById(R.id.edit_infos);
-
+        if (!session.isFirstTime()) {
+            TapTargetView.showFor(getActivity(),
+                    TapTarget.forView(view.findViewById(R.id.btnMessage), "Rated Movies", "From here you can see your rated movies")
+                            // All options below are optional
+                            .outerCircleAlpha(0.1f)            // Specify the alpha amount for the outer circle
+                            .targetCircleColor(R.color.colorGray)   // Specify a color for the target circle
+                            .titleTextSize(20)                  // Specify the size (in sp) of the title text
+                            .descriptionTextSize(10)
+                            .tintTarget(false)  // Specify the size (in sp) of the description text
+                            .targetRadius(60),                  // Specify the target radius (in dp)
+                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                        @Override
+                        public void onTargetClick(TapTargetView view) {
+                            super.onTargetClick(view);      // This call is optional
+                            session.setIntro(true);
+                        }
+                    });
+        }
         ImageView overflow = (ImageView) view.findViewById(R.id.logout);
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,6 +204,10 @@ public class UserProfileFragment extends Fragment {
         name.setText(Context.CURRENT_USER.getName());
         mail.setText(Context.CURRENT_USER.getEmail());
 
+        done.setVisibility(View.GONE);
+        editInfos.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        getRated("movie");
         btntv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,9 +240,9 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-
         TextView firstLetter = (TextView) view.findViewById(R.id.first_letter);
-        firstLetter.setText(Context.CONNECTED_USER.getName().substring(0,1));
+
+        firstLetter.setText(Context.CURRENT_USER.getName().substring(0,1));
 
         initListeners();
 
@@ -365,6 +391,10 @@ public class UserProfileFragment extends Fragment {
         Intent i = new Intent(getContext(), RegisterActivity.class);
         startActivity(i);
         getActivity().finish();
+        if (Context.FB_LOGIN)
+        {
+            LoginManager.getInstance().logOut();
+        }
     }
 
 
@@ -377,19 +407,35 @@ public class UserProfileFragment extends Fragment {
             public void onResponse(JSONObject response) {
 
                 try {
-                    JSONArray results = (JSONArray) response.get("rated");
-                    dataSource = new ArrayList<>();
-                    for (int i = 0; i < results.length(); i++) {
+                    if (!response.getBoolean("error")) {
+                        nothing.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        JSONObject result = (JSONObject) response.get("result");
 
-                        JSONObject rated = (JSONObject) results.get(i);
-                        String idrated = rated.getString("id_rated");
+                        if (result.get("id_rated") instanceof JSONArray)
+                        {
+                        dataSource = new ArrayList<>();
+                        JSONArray ids_rated = (JSONArray) result.get("id_rated");
+                        JSONArray values = (JSONArray) result.get("value");
+                        for (int i = 0; i < ids_rated.length(); i++) {
+                            String idrated = (String) ids_rated.get(i);
+                            dataSource.add(idrated);
+                        }
+                        }
+                        else
+                        {
+                            dataSource = new ArrayList<>();
+                            String id_rated = (String) result.get("id_rated");
+                            String value = (String) result.get("value");
+                                dataSource.add(id_rated);
 
-                        dataSource.add(idrated);
+                        }
 
+                        getRated1(type, dataSource);
                     }
-
-                    getRated1(type, dataSource);
-
+                    else
+                        recyclerView.setVisibility(View.GONE);
+                        nothing.setVisibility(View.VISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(),

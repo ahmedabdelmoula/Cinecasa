@@ -61,7 +61,8 @@ public class TVShowDetailsFragment extends Fragment {
     ShadowImageView ivposter;
     AutoResizeTextView txttitle;
     Button btrate;
-    TextView txtname,txtvote_count,txtvote_average,txtpopularity,txtoriginal_name,txtoverview,txtfirst_air_date;
+    ImageView star;
+    TextView txtname,txtvote_count,txtvote_average,txtpopularity,txtoriginal_name,txtoverview,txtfirst_air_date,rating;
     private String urlJsongetRated="http://idol-design.com/Cinecasa/Scripts/SelectRatedByUserUid.php?uid_user="+Context.CURRENT_USER.getUid()+"&type=tv";
     String months[] = {"January", "February", "March", "April",
             "May", "June", "July", "August", "September",
@@ -73,6 +74,7 @@ public class TVShowDetailsFragment extends Fragment {
     private ProgressDialog pDialog;
     String session_id;
     List<String> dataSource = new ArrayList<>();
+    List<String> dataSource1 = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tvshowdetails, container, false);
@@ -98,7 +100,8 @@ public class TVShowDetailsFragment extends Fragment {
         txtoverview = (TextView) view.findViewById(R.id.txtoverview);
         txtfirst_air_date = (TextView) view.findViewById(R.id.txtfirst_air_date);
         ivposter = (ShadowImageView) view.findViewById(R.id.ivposter);
-
+        rating = (TextView) view.findViewById(R.id.ratingtxt);
+        star = (ImageView) view.findViewById(R.id.starrr);
         txtname.setText(Context.ITEM_TV_SHOW.getName());
         txtvote_count.setText("Vote Count : "+ Context.ITEM_TV_SHOW.getVote_count());
         txtvote_average.setText(Context.ITEM_TV_SHOW.getVote_average().toString());
@@ -299,21 +302,37 @@ public class TVShowDetailsFragment extends Fragment {
             public void onResponse(JSONObject response) {
 
                 try {
-                    // Parsing json object response
-
-
-                    JSONArray results = (JSONArray) response.get("rated");
-                    for (int i = 0; i < response.length(); i++) {
-
-                        JSONObject movie = (JSONObject) results.get(i);
-                        String idmovie = movie.getString("id_rated");
-
-                        dataSource.add(idmovie);
-
-                        if (dataSource.contains(String.valueOf(Context.ITEM_TV_SHOW.getId())))
+                    if (!response.getBoolean("error")) {
+                        JSONObject result = (JSONObject) response.get("result");
+                        if (result.get("id_rated") instanceof JSONArray)
                         {
-                            txtratevalue.setEnabled(false);
-                            btrate.setEnabled(false);
+                            dataSource = new ArrayList<>();
+                            dataSource1 = new ArrayList<>();
+                            JSONArray ids_rated = (JSONArray) result.get("id_rated");
+                            JSONArray values = (JSONArray) result.get("value");
+                            for (int i = 0; i < ids_rated.length(); i++) {
+                                String idrated = (String) ids_rated.get(i);
+                                dataSource.add(idrated);
+                                dataSource1.add((String) values.get(i));
+                            }
+                        }
+                        else
+                        {
+                            dataSource = new ArrayList<>();
+                            dataSource1 = new ArrayList<>();
+                            String id_rated = (String) result.get("id_rated");
+                            String value = (String) result.get("value");
+                            dataSource.add(id_rated);
+                            dataSource1.add(value);
+                        }
+
+                        if (dataSource.contains(String.valueOf(Context.ITEM_MOVIE.getId()))) {
+                            txtratevalue.setVisibility(View.GONE);
+                            btrate.setVisibility(View.GONE);
+                            star.setVisibility(View.VISIBLE);
+                            rating.setVisibility(View.VISIBLE);
+                            int pos=dataSource.indexOf(String.valueOf(Context.ITEM_MOVIE.getId()));
+                            rating.setText("Your Rating : "+dataSource1.get(pos));
                         }
 
                     }

@@ -8,7 +8,6 @@ import esprit.tn.cinecasa.entities.User;
 
 /**
  * Created by ahmed on 01-Nov-17.
- * class context mta3 java 3amnewel :p bech ki yenzel 3la element fi list nloadih fi fragment e5er
  */
 
 public class Context {
@@ -31,4 +30,5 @@ public class Context {
     public static int ACTOR_ID;
     public static int selected = 0;
     public static boolean registerSelected = false;
+    public static boolean FB_LOGIN = false;
 }

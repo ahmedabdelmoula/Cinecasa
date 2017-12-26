@@ -18,7 +18,7 @@ public class SplashScreen extends AppCompatActivity implements Animation.Animati
 
     // Splash screen timer
 //    private static int SPLASH_TIME_OUT = 10000;
-    private static int SPLASH_TIME_OUT = 100;
+    private static int SPLASH_TIME_OUT = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

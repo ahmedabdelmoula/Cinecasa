@@ -27,6 +27,7 @@ public class SessionManager {
     private static final String PREF_UID = "uId";
 
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
+    private static final String FIRST_TIME = "isFirstTime";
 
     public SessionManager(Context context) {
         this._context = context;
@@ -43,10 +44,17 @@ public class SessionManager {
 
         Log.d(TAG, "User login session modified!");
     }
+    public void setIntro(boolean isFirstTime) {
+
+        editor.putBoolean(FIRST_TIME, isFirstTime);
+        // commit changes
+        editor.commit();
+    }
 
     public boolean isLoggedIn(){
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
-    public String getUID(){ return pref.getString(PREF_UID,"no uid");
-    }
+    public String getUID(){ return pref.getString(PREF_UID,"no uid");}
+    public boolean isFirstTime(){return pref.getBoolean(FIRST_TIME, false);}
+
 }
