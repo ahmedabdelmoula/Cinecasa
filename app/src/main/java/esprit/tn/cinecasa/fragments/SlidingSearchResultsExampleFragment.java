@@ -63,7 +63,7 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
     private String mLastQuery = "";
     private boolean created = true;
     private View v;
-
+    private static boolean CURRENT_TYPE = true;
     public SlidingSearchResultsExampleFragment() {
         // Required empty public constructor
     }
@@ -76,9 +76,16 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
         pDialog.setCancelable(false);
         searchResult = new ArrayList<>();
 
+        if(esprit.tn.cinecasa.utils.Context.SELECTED_TYPE == CURRENT_TYPE){
+            FragmentManager fragmentManager = this.getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.containerScroll, new GenresMoviesFragment(), "GenresMoviesFragment").commitAllowingStateLoss();
 
-        FragmentManager fragmentManager = this.getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.containerScroll, new GenresMoviesFragment(), "GenresMoviesFragment").commitAllowingStateLoss();
+        }
+        else {
+            FragmentManager fragmentManager = this.getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.containerScroll, new GenresTVShowsFragment(), "GenresTVShowsFragment").commitAllowingStateLoss();
+
+        }
 
         return inflater.inflate(R.layout.fragment_sliding_search_results_example_fragment, container, false);
     }
