@@ -1,5 +1,6 @@
 package esprit.tn.cinecasa;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -51,6 +52,7 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
     private Bundle b;
     private static boolean CURRENT_TYPE = true;
     private SessionManager session;
+    private Activity activity;
 
     //collections
     private List<Fragment> fragments;// used for ViewPager adapter
@@ -78,12 +80,13 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
 
         esprit.tn.cinecasa.utils.Context.MAIN_ACTIVITY = this;
         session = new SessionManager(getApplicationContext());
+        activity=this;
         if (!session.isFirstTime()) {
             TapTargetView.showFor(this,
-                    TapTarget.forView(findViewById(R.id.bnve), "HOME", "From here you can see your Home")
+                    TapTarget.forView(findViewById(R.id.fab), "Welcome in Cinecasa", "From here you can swipe between movies and tv Shows")
                             // All options below are optional
-                            .outerCircleAlpha(0.3f)            // Specify the alpha amount for the outer circle
-                            .targetCircleColor(R.color.colorPrimary)   // Specify a color for the target circle
+                            .outerCircleAlpha(0.7f)            // Specify the alpha amount for the outer circle
+                            .targetCircleColor(R.color.white)   // Specify a color for the target circle
                             .titleTextSize(30)                  // Specify the size (in sp) of the title text
                             .descriptionTextSize(20)
                             .tintTarget(false)  // Specify the size (in sp) of the description text
@@ -91,13 +94,75 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
                     new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
                         @Override
                         public void onTargetClick(TapTargetView view) {
-                            super.onTargetClick(view);      // This call is optional
-                           // session.setIntro(true);
+                            view.setVisibility(View.GONE);
+                            TapTargetView.showFor(activity,
+                                    TapTarget.forView(findViewById(R.id.i_home), "HOME", "From here you can discover different categories of movies or tv shows")
+                                            // All options below are optional
+                                            .outerCircleAlpha(0.7f)            // Specify the alpha amount for the outer circle
+                                            .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                            .titleTextSize(30)                  // Specify the size (in sp) of the title text
+                                            .descriptionTextSize(20)
+                                            .tintTarget(false)  // Specify the size (in sp) of the description text
+                                            .targetRadius(60),                  // Specify the target radius (in dp)
+                                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                                        @Override
+                                        public void onTargetClick(TapTargetView view) {
+                                            view.setVisibility(View.GONE);
+                                            TapTargetView.showFor(activity,
+                                                    TapTarget.forView(findViewById(R.id.i_search), "SEARCH", "From here you can search for movies, tv shows or actors")
+                                                            // All options below are optional
+                                                            .outerCircleAlpha(0.7f)            // Specify the alpha amount for the outer circle
+                                                            .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                                            .titleTextSize(30)                  // Specify the size (in sp) of the title text
+                                                            .descriptionTextSize(20)
+                                                            .tintTarget(false)  // Specify the size (in sp) of the description text
+                                                            .targetRadius(60),                  // Specify the target radius (in dp)
+                                                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                                                        @Override
+                                                        public void onTargetClick(TapTargetView view) {
+                                                            view.setVisibility(View.GONE);
+                                                            TapTargetView.showFor(activity,
+                                                                    TapTarget.forView(findViewById(R.id.i_favor), "FAVORITE", "From here you can swipe up between your different favorite actors")
+                                                                            // All options below are optional
+                                                                            .outerCircleAlpha(0.7f)            // Specify the alpha amount for the outer circle
+                                                                            .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                                                            .titleTextSize(30)                  // Specify the size (in sp) of the title text
+                                                                            .descriptionTextSize(20)
+                                                                            .tintTarget(false)  // Specify the size (in sp) of the description text
+                                                                            .targetRadius(60),                  // Specify the target radius (in dp)
+                                                                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                                                                        @Override
+                                                                        public void onTargetClick(TapTargetView view) {
+                                                                            view.setVisibility(View.GONE);
+                                                                            TapTargetView.showFor(activity,
+                                                                                    TapTarget.forView(findViewById(R.id.i_visibility), "PROFILE", "From here you can update your profile")
+                                                                                            // All options below are optional
+                                                                                            .outerCircleAlpha(0.7f)            // Specify the alpha amount for the outer circle
+                                                                                            .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                                                                            .titleTextSize(30)                  // Specify the size (in sp) of the title text
+                                                                                            .descriptionTextSize(20)
+                                                                                            .tintTarget(false)  // Specify the size (in sp) of the description text
+                                                                                            .targetRadius(60),                  // Specify the target radius (in dp)
+                                                                                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                                                                                        @Override
+                                                                                        public void onTargetClick(TapTargetView view) {
+                                                                                            view.setVisibility(View.GONE);
+                                                                                            session.setIntro(true);
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    });
+                                                        }
+                                                    });
+                                        }
+                                    });
                         }
                     });
         }
 
     }
+
+   
 
     public void loadMovies(){
         fragHome = new HomeFragment();
