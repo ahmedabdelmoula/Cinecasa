@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +46,9 @@ import javax.xml.datatype.Duration;
 
 import esprit.tn.cinecasa.R;
 import esprit.tn.cinecasa.adapters.CastAdapter;
+import esprit.tn.cinecasa.adapters.ReviewAdapter;
 import esprit.tn.cinecasa.entities.Cast;
+import esprit.tn.cinecasa.entities.Review;
 import esprit.tn.cinecasa.utils.AppController;
 import esprit.tn.cinecasa.utils.AutoResizeTextView;
 import esprit.tn.cinecasa.utils.Context;
@@ -52,6 +58,10 @@ import esprit.tn.cinecasa.utils.Context;
  */
 
 public class TVShowDetailsFragment extends Fragment {
+    private String urlJsonAddReview = "http://idol-design.com/Cinecasa/Scripts/AddReview.php?id_movie="+Context.ITEM_TV_SHOW.getId()+"&username="+Context.CURRENT_USER.getName()+"&review=";
+    private String urlJsonLoadReview = "http://idol-design.com/Cinecasa/Scripts/SelectReviewByMovieId.php?id_movie="+Context.ITEM_TV_SHOW.getId();
+    private List<Review> listReviewint;
+    ListView listIntReview;
     private View view;
     private RecyclerView recyclerView;
     private CastAdapter castadapter;
@@ -60,9 +70,10 @@ public class TVShowDetailsFragment extends Fragment {
     RatingBar txtratevalue;
     ShadowImageView ivposter;
     AutoResizeTextView txttitle;
-    Button btrate;
+    Button btrate,btreview;
     ImageView star;
-    TextView txtname,txtvote_count,txtvote_average,txtpopularity,txtoriginal_name,txtoverview,txtfirst_air_date,rating;
+    EditText reviewtxt;
+    TextView txtname,txtvote_count,txtvote_average,txtpopularity,txtoriginal_name,txtoverview,txtfirst_air_date,rating,titlerev;
     private String urlJsongetRated="http://idol-design.com/Cinecasa/Scripts/SelectRatedByUserUid.php?uid_user="+Context.CURRENT_USER.getUid()+"&type=tv";
     String months[] = {"January", "February", "March", "April",
             "May", "June", "July", "August", "September",
@@ -87,11 +98,16 @@ public class TVShowDetailsFragment extends Fragment {
 
         urlJsonCast=urlJsonCast+ Context.ITEM_TV_SHOW.getId()+urlJsonCastPart2;
         makeJsonObjectCastRequest();
+        makeJsonObjectInternalReviewRequest();
+        listIntReview = (ListView) view.findViewById(R.id.listintReview);
+        titlerev = (TextView) view.findViewById(R.id.titlerev);
         pDialog = new ProgressDialog(this.getActivity());
         pDialog.setCancelable(false);
         txtratevalue = (RatingBar) view.findViewById(R.id.ratevalue);
         btrate = (Button) view.findViewById(R.id.btrate);
         getRated();
+        btreview = (Button) view.findViewById(R.id.btreview);
+        reviewtxt = (EditText) view.findViewById(R.id.reviewtxt);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         txtname = (TextView) view.findViewById(R.id.txtname);
         txtvote_count = (TextView) view.findViewById(R.id.txtvote_count);
@@ -138,6 +154,13 @@ public class TVShowDetailsFragment extends Fragment {
 
             }
         });
+        btreview.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                AddReview();
+
+            }
+        });
+
         return view;
     }
 
@@ -368,7 +391,8 @@ public class TVShowDetailsFragment extends Fragment {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Rate Response: " + response.toString());
-                hideDialog();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(fragment).attach(fragment).commit();
 
 
 
@@ -389,8 +413,121 @@ public class TVShowDetailsFragment extends Fragment {
         strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq);
 
+    }
+
+    private void makeJsonObjectInternalReviewRequest() {
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlJsonLoadReview, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+                try {
+                    if (!response.getBoolean("error")) {
+                        titlerev.setVisibility(view.VISIBLE);
+                        listIntReview.setVisibility(view.VISIBLE);
+                        JSONObject result = (JSONObject) response.get("result");
+
+                        if (result.get("username") instanceof JSONArray)
+                        {
+                            List<Review> dataSource = new ArrayList<>();
+                            JSONArray usernames = (JSONArray) result.get("username");
+                            JSONArray reviews = (JSONArray) result.get("review");
+                            for (int i = 0; i < usernames.length(); i++) {
+                                Review review = new Review((String) usernames.get(i), (String) reviews.get(i));
+                                dataSource.add(review);
+
+                            }
+                            listReviewint = dataSource;
+                            listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
+                            setListViewHeightBasedOnChildren(listIntReview);
+                        }
+                        else
+                        {
+                            List<Review> dataSource = new ArrayList<>();
+                            Review review = new Review((String) result.get("username"),(String) result.get("review"));
+                            dataSource.add(review);
+                            listReviewint = dataSource;
+                            listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
+                            setListViewHeightBasedOnChildren(listIntReview);
+                        }
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        jsonObjReq.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "hello");
+    }
+
+    void AddReview(){
+        StringRequest strReq = new StringRequest(Request.Method.GET,urlJsonAddReview+reviewtxt.getText().toString().trim(), new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "AddReview Response: " + response.toString());
+                reviewtxt.getText().clear();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(fragment).attach(fragment).commit();
 
 
+            }
+        }, new Response.ErrorListener() {
 
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "AddReview Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+
+        };
+
+        // Adding request to request queue
+
+        strReq.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(strReq);
+
+    }
+
+
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0) {
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewPager.LayoutParams.WRAP_CONTENT));
+            }
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }

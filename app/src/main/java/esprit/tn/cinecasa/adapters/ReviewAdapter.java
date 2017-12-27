@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import esprit.tn.cinecasa.R;
 import esprit.tn.cinecasa.entities.Review;
 
@@ -35,9 +36,11 @@ public class ReviewAdapter extends ArrayAdapter<Review> {
         Review currentMovie = movies.get(position);
 
         convertView = LayoutInflater.from(getContext()).inflate(ressource, parent, false);
+        CircleImageView profilePicture = (CircleImageView) convertView.findViewById(R.id.civProfilePicrev);
+        TextView firstLetter = (TextView) convertView.findViewById(R.id.first_letter);
         TextView auth = (TextView) convertView.findViewById(R.id.reviewAuthor);
         TextView cont = (TextView) convertView.findViewById(R.id.Reviewcontent);
-
+        firstLetter.setText(currentMovie.getAuthor().substring(0,1).toUpperCase());
         auth.setText(currentMovie.getAuthor());
         cont.setText(currentMovie.getContent());
 

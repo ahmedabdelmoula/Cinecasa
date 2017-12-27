@@ -225,7 +225,7 @@ public class UserProfileFragment extends Fragment {
 
         TextView firstLetter = (TextView) view.findViewById(R.id.first_letter);
 
-        firstLetter.setText(Context.CURRENT_USER.getName().substring(0,1));
+        firstLetter.setText(Context.CURRENT_USER.getName().substring(0,1).toUpperCase());
 
         initListeners();
 

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -64,15 +66,17 @@ public class MovieDetailsFragment extends Fragment {
     private CastAdapter castadapter;
     private List<Cast> castList;
     private List<Review> listReview;
+    private List<Review> listReviewint;
     private View view;
-    ListView reviewList;
+    ListView reviewList,listIntReview;
     Fragment fragment = this;
     ShadowImageView ivposter;
     AutoResizeTextView txttitle;
-    TextView txtvote_count, txtvote_average, txtpopularity, txtoriginal_title, txtoverview, txtrelease_date,rating;
+    TextView txtvote_count, txtvote_average, txtpopularity, txtoriginal_title, txtoverview, txtrelease_date,rating,titlerev,rev;
     ImageView star;
+    EditText reviewtxt;
     RatingBar txtratevalue;
-    Button btrate;
+    Button btrate,btreview;
     String session_id;
     private static final int RECOVERY_DIALOG_REQUEST = 1;
     List<String> dataSource = new ArrayList<>();
@@ -86,6 +90,8 @@ public class MovieDetailsFragment extends Fragment {
     private String urlJsonCast = "https://api.themoviedb.org/3/movie/";
     private String urlJsonCastPart2 = "/credits?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private String urlJsonReview = "https://api.themoviedb.org/3/movie/" + Context.ITEM_MOVIE.getId() + "/reviews?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=1";
+    private String urlJsonAddReview = "http://idol-design.com/Cinecasa/Scripts/AddReview.php?id_movie="+Context.ITEM_MOVIE.getId()+"&username="+Context.CURRENT_USER.getName()+"&review=";
+    private String urlJsonLoadReview = "http://idol-design.com/Cinecasa/Scripts/SelectReviewByMovieId.php?id_movie="+Context.ITEM_MOVIE.getId();
     private static String TAG = MovieDetailsFragment.class.getSimpleName();
     String months[] = {"January", "February", "March", "April",
             "May", "June", "July", "August", "September",
@@ -112,11 +118,14 @@ public class MovieDetailsFragment extends Fragment {
         makeJsonObjectRequest();
         makeJsonObjectCastRequest();
         makeJsonObjectReviewRequest();
+        makeJsonObjectInternalReviewRequest();
 //
 //        shadowImageView = (ShadowImageView) view.findViewById(R.id.shadow);
 
         txtratevalue = (RatingBar) view.findViewById(R.id.ratevalue);
         btrate = (Button) view.findViewById(R.id.btrate);
+        btreview = (Button) view.findViewById(R.id.btreview);
+        reviewtxt = (EditText) view.findViewById(R.id.reviewtxt);
         getRated();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         txttitle = (AutoResizeTextView) view.findViewById(R.id.txttitle);
@@ -130,7 +139,9 @@ public class MovieDetailsFragment extends Fragment {
         txtrelease_date = (TextView) view.findViewById(R.id.txtrelease_date);
         ivposter = (ShadowImageView) view.findViewById(R.id.ivposter);
         reviewList = (ListView) view.findViewById(R.id.listReview);
-
+        listIntReview = (ListView) view.findViewById(R.id.listintReview);
+        titlerev = (TextView) view.findViewById(R.id.titlerev);
+        rev = (TextView) view.findViewById(R.id.rev);
         txttitle.setText(Context.ITEM_MOVIE.getTitle());
         txtvote_count.setText("Vote Count : " + Context.ITEM_MOVIE.getVote_count());
         txtvote_average.setText(Context.ITEM_MOVIE.getVote_average().toString());
@@ -191,6 +202,13 @@ public class MovieDetailsFragment extends Fragment {
         btrate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 getSession();
+
+            }
+        });
+
+        btreview.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                AddReview();
 
             }
         });
@@ -417,9 +435,13 @@ public class MovieDetailsFragment extends Fragment {
                         dataSource.add(review);
 
                     }
+                    if (dataSource.size()!=0) {
+                        rev.setVisibility(view.VISIBLE);
+                        reviewList.setVisibility(view.VISIBLE);
+                    }
                     listReview = dataSource;
                     reviewList.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReview));
-
+                    setListViewHeightBasedOnChildren(reviewList);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -532,7 +554,8 @@ public class MovieDetailsFragment extends Fragment {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Rate Response: " + response.toString());
-                hideDialog();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(fragment).attach(fragment).commit();
 
 
             }
@@ -556,5 +579,122 @@ public class MovieDetailsFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(strReq);
 
 
+    }
+
+    private void makeJsonObjectInternalReviewRequest() {
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlJsonLoadReview, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+                try {
+                    if (!response.getBoolean("error")) {
+                        titlerev.setVisibility(view.VISIBLE);
+                        listIntReview.setVisibility(view.VISIBLE);
+                        JSONObject result = (JSONObject) response.get("result");
+
+                        if (result.get("username") instanceof JSONArray)
+                        {
+                            List<Review> dataSource = new ArrayList<>();
+                            JSONArray usernames = (JSONArray) result.get("username");
+                            JSONArray reviews = (JSONArray) result.get("review");
+                            for (int i = 0; i < usernames.length(); i++) {
+                                Review review = new Review((String) usernames.get(i), (String) reviews.get(i));
+                                dataSource.add(review);
+
+                            }
+                            listReviewint = dataSource;
+                            listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
+                            setListViewHeightBasedOnChildren(listIntReview);
+                        }
+                        else
+                        {
+                            List<Review> dataSource = new ArrayList<>();
+                            Review review = new Review((String) result.get("username"),(String) result.get("review"));
+                            dataSource.add(review);
+                            listReviewint = dataSource;
+                            listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
+                            setListViewHeightBasedOnChildren(listIntReview);
+                        }
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        jsonObjReq.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "hello");
+    }
+
+   void AddReview(){
+       StringRequest strReq = new StringRequest(Request.Method.GET,urlJsonAddReview+reviewtxt.getText().toString().trim(), new Response.Listener<String>() {
+
+           @Override
+           public void onResponse(String response) {
+               Log.d(TAG, "AddReview Response: " + response.toString());
+               reviewtxt.getText().clear();
+               FragmentTransaction ft = getFragmentManager().beginTransaction();
+               ft.detach(fragment).attach(fragment).commit();
+
+
+           }
+       }, new Response.ErrorListener() {
+
+           @Override
+           public void onErrorResponse(VolleyError error) {
+               Log.e(TAG, "AddReview Error: " + error.getMessage());
+               Toast.makeText(getContext(),
+                       error.getMessage(), Toast.LENGTH_LONG).show();
+               hideDialog();
+           }
+       }) {
+
+
+       };
+
+       // Adding request to request queue
+
+       strReq.setShouldCache(false);
+       AppController.getInstance().addToRequestQueue(strReq);
+
+
+
+   }
+
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0) {
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewPager.LayoutParams.WRAP_CONTENT));
+            }
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }

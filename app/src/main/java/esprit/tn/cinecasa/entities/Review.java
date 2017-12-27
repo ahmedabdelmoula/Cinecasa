@@ -16,6 +16,11 @@ public class Review {
         this.content = content;
     }
 
+    public Review(String author, String content) {
+        this.author = author;
+        this.content = content;
+    }
+
     public String getId() {
         return id;
     }
