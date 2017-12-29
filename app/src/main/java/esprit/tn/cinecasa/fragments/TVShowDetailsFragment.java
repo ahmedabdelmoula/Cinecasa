@@ -52,6 +52,7 @@ import esprit.tn.cinecasa.entities.Review;
 import esprit.tn.cinecasa.utils.AppController;
 import esprit.tn.cinecasa.utils.AutoResizeTextView;
 import esprit.tn.cinecasa.utils.Context;
+import esprit.tn.cinecasa.utils.ExpandableHeightListView;
 
 /**
  * Created by ahmed on 18-Nov-17.
@@ -61,7 +62,7 @@ public class TVShowDetailsFragment extends Fragment {
     private String urlJsonAddReview = "http://idol-design.com/Cinecasa/Scripts/AddReview.php?id_movie="+Context.ITEM_TV_SHOW.getId()+"&username="+Context.CURRENT_USER.getName()+"&review=";
     private String urlJsonLoadReview = "http://idol-design.com/Cinecasa/Scripts/SelectReviewByMovieId.php?id_movie="+Context.ITEM_TV_SHOW.getId();
     private List<Review> listReviewint;
-    ListView listIntReview;
+    ExpandableHeightListView listIntReview;
     private View view;
     private RecyclerView recyclerView;
     private CastAdapter castadapter;
@@ -99,7 +100,7 @@ public class TVShowDetailsFragment extends Fragment {
         urlJsonCast=urlJsonCast+ Context.ITEM_TV_SHOW.getId()+urlJsonCastPart2;
         makeJsonObjectCastRequest();
         makeJsonObjectInternalReviewRequest();
-        listIntReview = (ListView) view.findViewById(R.id.listintReview);
+        listIntReview = (ExpandableHeightListView) view.findViewById(R.id.listintReview);
         titlerev = (TextView) view.findViewById(R.id.titlerev);
         pDialog = new ProgressDialog(this.getActivity());
         pDialog.setCancelable(false);
@@ -441,7 +442,7 @@ public class TVShowDetailsFragment extends Fragment {
                             }
                             listReviewint = dataSource;
                             listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
-                            setListViewHeightBasedOnChildren(listIntReview);
+                            listIntReview.setExpanded(true);
                         }
                         else
                         {
@@ -450,7 +451,7 @@ public class TVShowDetailsFragment extends Fragment {
                             dataSource.add(review);
                             listReviewint = dataSource;
                             listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
-                            setListViewHeightBasedOnChildren(listIntReview);
+                            listIntReview.setExpanded(true);
                         }
 
                     }
@@ -508,26 +509,5 @@ public class TVShowDetailsFragment extends Fragment {
     }
 
 
-    private void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-        int totalHeight = 0;
-        View view = null;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0) {
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewPager.LayoutParams.WRAP_CONTENT));
-            }
-            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
 }

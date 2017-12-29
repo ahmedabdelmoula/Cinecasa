@@ -210,18 +210,18 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-        profilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-
-                intent.setType("image/*");
-
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-
-                startActivityForResult(Intent.createChooser(intent, "Select Image From Gallery"), 1);
-            }
-        });
+//        profilePicture.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent();
+//
+//                intent.setType("image/*");
+//
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//
+//                startActivityForResult(Intent.createChooser(intent, "Select Image From Gallery"), 1);
+//            }
+//        });
 
         TextView firstLetter = (TextView) view.findViewById(R.id.first_letter);
 
@@ -515,12 +515,14 @@ public class UserProfileFragment extends Fragment {
 
     public void affiche(String type) {
         if (type.equals("movie")) {
+            nothing.setVisibility(View.GONE);
             ratedMovieAdapter = new RatedMovieAdapter(getActivity(), dataSourceMovies);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(ratedMovieAdapter);
 
         } else {
+            nothing.setVisibility(View.GONE);
             ratedTVShowAdapter = new RatedTVShowAdapter(getActivity(), dataSourceTVShow);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
             recyclerView.setLayoutManager(mLayoutManager);

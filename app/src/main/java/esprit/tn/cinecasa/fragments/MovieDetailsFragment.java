@@ -56,6 +56,7 @@ import esprit.tn.cinecasa.utils.AppController;
 import esprit.tn.cinecasa.utils.AutoResizeTextView;
 import esprit.tn.cinecasa.utils.Config;
 import esprit.tn.cinecasa.utils.Context;
+import esprit.tn.cinecasa.utils.ExpandableHeightListView;
 
 /**
  * Created by ahmed on 18-Nov-17.
@@ -68,7 +69,7 @@ public class MovieDetailsFragment extends Fragment {
     private List<Review> listReview;
     private List<Review> listReviewint;
     private View view;
-    ListView reviewList,listIntReview;
+    ExpandableHeightListView reviewList,listIntReview;
     Fragment fragment = this;
     ShadowImageView ivposter;
     AutoResizeTextView txttitle;
@@ -138,8 +139,8 @@ public class MovieDetailsFragment extends Fragment {
         txtoverview = (TextView) view.findViewById(R.id.txtoverview);
         txtrelease_date = (TextView) view.findViewById(R.id.txtrelease_date);
         ivposter = (ShadowImageView) view.findViewById(R.id.ivposter);
-        reviewList = (ListView) view.findViewById(R.id.listReview);
-        listIntReview = (ListView) view.findViewById(R.id.listintReview);
+        reviewList = (ExpandableHeightListView) view.findViewById(R.id.listReview);
+        listIntReview = (ExpandableHeightListView) view.findViewById(R.id.listintReview);
         titlerev = (TextView) view.findViewById(R.id.titlerev);
         rev = (TextView) view.findViewById(R.id.rev);
         txttitle.setText(Context.ITEM_MOVIE.getTitle());
@@ -299,7 +300,6 @@ public class MovieDetailsFragment extends Fragment {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setAdapter(castadapter);
-                    //setListViewHeightBasedOnChildren(recyclerView);
 
 
                 } catch (JSONException e) {
@@ -441,7 +441,7 @@ public class MovieDetailsFragment extends Fragment {
                     }
                     listReview = dataSource;
                     reviewList.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReview));
-                    setListViewHeightBasedOnChildren(reviewList);
+                    reviewList.setExpanded(true);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -607,7 +607,7 @@ public class MovieDetailsFragment extends Fragment {
                             }
                             listReviewint = dataSource;
                             listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
-                            setListViewHeightBasedOnChildren(listIntReview);
+                            listIntReview.setExpanded(true);
                         }
                         else
                         {
@@ -616,7 +616,7 @@ public class MovieDetailsFragment extends Fragment {
                             dataSource.add(review);
                             listReviewint = dataSource;
                             listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
-                            setListViewHeightBasedOnChildren(listIntReview);
+                            listIntReview.setExpanded(true);
                         }
 
                     }
@@ -675,26 +675,4 @@ public class MovieDetailsFragment extends Fragment {
 
    }
 
-    private void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-        int totalHeight = 0;
-        View view = null;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0) {
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewPager.LayoutParams.WRAP_CONTENT));
-            }
-            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
 }
