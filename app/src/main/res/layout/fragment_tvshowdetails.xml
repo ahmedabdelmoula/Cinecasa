@@ -50,7 +50,7 @@
 
                         <esprit.tn.cinecasa.utils.AutoResizeTextView
                             android:id="@+id/txtname"
-                            android:layout_width="match_parent"
+                            android:layout_width="160dp"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:maxLines="1"
@@ -170,7 +170,7 @@
                         android:layout_height="24dp"
                         android:background="@drawable/star"
                         android:scaleType="center"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/ratingtxt"
@@ -181,7 +181,7 @@
                         android:gravity="center"
                         android:text="6.8"
                         android:textSize="18sp"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <TextView
@@ -203,6 +203,7 @@
 
 
                 <TextView
+                    android:id="@+id/titlerev"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -212,34 +213,34 @@
                     android:textColor="@android:color/black"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
-                    android:id="@+id/titlerev"/>
+                    android:visibility="gone" />
 
-                <ListView
+                <esprit.tn.cinecasa.utils.ExpandableHeightListView
                     android:id="@+id/listintReview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_weight="10">
+                    android:layout_weight="10"
+                    android:orientation="horizontal">
+
                     <EditText
-                        android:layout_width="0dp"
-                        android:layout_weight="6"
-                        android:layout_height="wrap_content"
                         android:id="@+id/reviewtxt"
-                        android:hint="Type Your Review"/>
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:hint="Type Your Review" />
 
                     <Button
-                        android:layout_alignParentRight="true"
-                        android:layout_width="0dp"
-                        android:layout_weight="3"
-                        android:layout_height="wrap_content"
-                        android:text="Add Review"
                         android:id="@+id/btreview"
-                        />
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_weight="3"
+                        android:text="Add Review" />
                 </LinearLayout>
 
             </LinearLayout>

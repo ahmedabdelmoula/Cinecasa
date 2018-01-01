@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/colorPrimary" />
-    <item>
+    <item android:id="@+id/ch">
         <bitmap
-            android:id="@+id/bitmap"
-            android:alpha="0.1"
+            android:id="@+id/bitmapch"
+            android:alpha="0.3"
             android:gravity="center"
-            android:src="@drawable/bebe" />
+            android:src="@drawable/pga" />
     </item>
 
     <item

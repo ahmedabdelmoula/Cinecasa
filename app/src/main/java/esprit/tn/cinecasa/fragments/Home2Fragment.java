@@ -86,6 +86,7 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
         View view = inflater.inflate(R.layout.demo_fragment_gplay_card, container, false);
 
         big_img = (RoundedImageView) view.findViewById(R.id.big_image_movies);
+
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
@@ -152,6 +153,7 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
                         movie1.setBackdrop_path(backdrop_path);
 
                         if (i == 0) {
+                            System.out.print("+++"+big_img.getMaxWidth()+"++"+big_img.getMaxWidth()+"++"+big_img.getMeasuredWidth());
                             Glide
                                     .with(getContext())
                                     .load(backdrop_path)

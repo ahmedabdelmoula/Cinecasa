@@ -4,7 +4,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -81,6 +84,8 @@ public class LoginFragment extends Fragment {
     private CallbackManager callbackManager;
     private LoginButton facebookLogin;
     private Bundle bundlefb;
+    private AlertDialog alert;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_login, container, false);
@@ -97,39 +102,40 @@ public class LoginFragment extends Fragment {
 //                .load(R.drawable.facebook)
 //                .asBitmap()
 //                .into(facebook);
-facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-    @Override
-    public void onSuccess(LoginResult loginResult) {
-        String accessToken = loginResult.getAccessToken().getToken();
-        Log.i("accessToken", accessToken);
-        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+        facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                String accessToken = loginResult.getAccessToken().getToken();
+                Log.i("accessToken", accessToken);
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.i("LoginActivity", response.toString());
+                        // Get facebook data from login
+                        Bundle bFacebookData = getFacebookData(object);
+                        bundlefb = bFacebookData;
+                        Context.FB_LOGIN = true;
+                        checkLoginfacebook(bFacebookData.getString("email"));
+                    }
+                });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location"); // Parámetros que pedimos a facebook
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
 
             @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                Log.i("LoginActivity", response.toString());
-                // Get facebook data from login
-                Bundle bFacebookData = getFacebookData(object);
-                bundlefb=bFacebookData;
-                Context.FB_LOGIN=true;
-                checkLoginfacebook(bFacebookData.getString("email"));
+            public void onCancel() {
+                Toast.makeText(getContext(), "cancel", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(getContext(), "Please error", Toast.LENGTH_LONG).show();
             }
         });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location"); // Parámetros que pedimos a facebook
-        request.setParameters(parameters);
-        request.executeAsync();
-    }
 
-    @Override
-    public void onCancel() {
-        Toast.makeText(getContext(), "cancel", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onError(FacebookException error) {
-        Toast.makeText(getContext(), "Please error", Toast.LENGTH_LONG).show();
-    }
-});
         lickedIn = (ImageButton) view.findViewById(R.id.linked_in_icon);
         Glide
                 .with(getContext())
@@ -157,7 +163,7 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
         rememberMe = (CheckBox) view.findViewById(R.id.remember_me);
         btnLinkToRegister = (Button) view.findViewById(R.id.btn_signup);
 
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),"Lato-Light.ttf");
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "Lato-Light.ttf");
         inputEmail.setTypeface(tf);
         inputPassword.setTypeface(tf);
         btnLogin.setTypeface(tf);
@@ -190,16 +196,21 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
 
-                // Check for empty data in the form
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    // login user
-                    checkLogin(email, password);
+                if (isNetworkAvailable()) {
+                    String email = inputEmail.getText().toString().trim();
+                    String password = inputPassword.getText().toString().trim();
+
+                    // Check for empty data in the form
+                    if (!email.isEmpty() && !password.isEmpty()) {
+                        // login user
+                        checkLogin(email, password);
+                    } else {
+                        // Prompt user to enter credentials
+                        Toast.makeText(getContext(), "Please enter the credentials!", Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    // Prompt user to enter credentials
-                    Toast.makeText(getContext(), "Please enter the credentials!", Toast.LENGTH_LONG).show();
+                    createNetErrorDialog();
                 }
             }
 
@@ -208,7 +219,7 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
         btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                Context.registerSelected  = true;
+                Context.registerSelected = true;
                 Intent i = new Intent(getContext(), RegisterActivity.class);
                 startActivity(i);
                 getActivity().finish();
@@ -221,7 +232,7 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode,resultCode,data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -265,7 +276,7 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
 
                         // Inserting row in users table
                         db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));
-                      Context.CURRENT_USER = db.getUserDetails(uid);
+                        Context.CURRENT_USER = db.getUserDetails(uid);
                         db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));
                         Context.CURRENT_USER = db.getUserDetails(uid);
                         Context.CONNECTED_USER = db.getUserDetails(uid);
@@ -322,6 +333,7 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
+
     private Bundle getFacebookData(JSONObject object) {
 
         try {
@@ -353,9 +365,8 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
                 bundle.putString("location", object.getJSONObject("location").getString("name"));
 
             return bundle;
-        }
-        catch(JSONException e) {
-            Log.d(TAG,"Error parsing JSON");
+        } catch (JSONException e) {
+            Log.d(TAG, "Error parsing JSON");
         }
         return null;
     }
@@ -477,7 +488,7 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
                         String created_at = user.getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(id, name, email, salt, uid, created_at,salt);
+                        db.addUser(id, name, email, salt, uid, created_at, salt);
                         Context.CURRENT_USER = db.getUserDetails(uid);
 
                         Context.CONNECTED_USER = db.getUserDetails(uid);
@@ -503,14 +514,14 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
                         // set dialog message
                         alertDialogBuilder
                                 .setCancelable(false)
-                                .setPositiveButton("Sign In",new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog,int id) {
-                                                System.out.println("****************************");
-                                                registerUser(bundlefb.getString("first_name")+bundlefb.getString("last_name"),bundlefb.getString("email"), userInput.getText().toString().trim());
+                                .setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        System.out.println("****************************");
+                                        registerUser(bundlefb.getString("first_name") + bundlefb.getString("last_name"), bundlefb.getString("email"), userInput.getText().toString().trim());
 
-                                            }
+                                    }
 
-                                        });
+                                });
 
                         // create alert dialog
                         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -549,5 +560,48 @@ facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private boolean isNetworkAvailable() {
+
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    protected void createNetErrorDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.")
+                .setTitle("Unable to connect")
+                .setCancelable(false)
+                .setPositiveButton("Settings",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                                startActivity(i);
+                            }
+                        }
+                )
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                getActivity().finish();
+                            }
+                        }
+                );
+        alert = builder.create();
+        alert.show();
     }
 }

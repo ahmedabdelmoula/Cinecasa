@@ -4,13 +4,18 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.DragEvent;
@@ -18,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +46,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +88,8 @@ public class ActorDetailsFragment extends Fragment {
 
         pDialog = new ProgressDialog(getActivity());
 
+
+
         actorName = (AutoResizeTextView) view.findViewById(R.id.actor_name);
         underName = (TextView) view.findViewById(R.id.under_name);
         favoriteButton = (Button) view.findViewById(R.id.add_favorite);
@@ -114,7 +126,7 @@ public class ActorDetailsFragment extends Fragment {
 
     private void getActorDetails() {
 
-        showpDialog();
+
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 "https://api.themoviedb.org/3/person/" + Context.ACTOR_ID + "?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US",
@@ -188,11 +200,7 @@ public class ActorDetailsFragment extends Fragment {
                         dataSource.add(actorId.getString("id_actor"));
 
                     }
-//                    Resources res = getResources();
-//                    LayerDrawable layerDrawable = (LayerDrawable) res.getDrawable(R.drawable.backgroundd);
-//                    BitmapDrawable newDrawable = (BitmapDrawable ) res.getDrawable(R.drawable.bebe_pp);
-//                    layerDrawable.setDrawableByLayerId(R.id.bitmap, getResources().getDrawable( R.drawable.bebe_pp ));
-//                    relativeLayout.setBackground(layerDrawable);
+
                     try {
                         Picasso
                                 .with(getContext())
@@ -286,10 +294,9 @@ public class ActorDetailsFragment extends Fragment {
                     Toast.makeText(getContext(),
                             "Error: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
+
+                    hidepDialog();
                 }
-
-                hidepDialog();
-
             }
         }, new Response.ErrorListener() {
 
