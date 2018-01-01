@@ -350,12 +350,12 @@ public class TVShowDetailsFragment extends Fragment {
                             dataSource1.add(value);
                         }
 
-                        if (dataSource.contains(String.valueOf(Context.ITEM_MOVIE.getId()))) {
+                        if (dataSource.contains(String.valueOf(Context.ITEM_TV_SHOW.getId()))) {
                             txtratevalue.setVisibility(View.GONE);
                             btrate.setVisibility(View.GONE);
                             star.setVisibility(View.VISIBLE);
                             rating.setVisibility(View.VISIBLE);
-                            int pos=dataSource.indexOf(String.valueOf(Context.ITEM_MOVIE.getId()));
+                            int pos=dataSource.indexOf(String.valueOf(Context.ITEM_TV_SHOW.getId()));
                             rating.setText("Your Rating : "+dataSource1.get(pos));
                         }
 
