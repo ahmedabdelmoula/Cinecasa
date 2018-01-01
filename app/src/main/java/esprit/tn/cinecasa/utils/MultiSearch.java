@@ -78,7 +78,7 @@ public class MultiSearch implements SearchSuggestion {
         if (mediaType.equals("person"))
             s = name;
         else if (releaseDate.contains("-"))
-            s = name + " ( " + releaseDate.substring(0, releaseDate.indexOf('-')) + " )";
+            s = name + " (" + releaseDate.substring(0, releaseDate.indexOf('-')) + ")";
 
         return s;
 

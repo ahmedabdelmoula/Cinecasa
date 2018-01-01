@@ -54,7 +54,7 @@ import esprit.tn.cinecasa.utils.CustPagerTransformer;
 public class CombinedCrediDetails extends Fragment {
 
     private View view;
-    private TextView  currentPage, allPages;
+    private TextView currentPage, allPages;
     private ViewPager viewPager;
     private List<CommonFragment> fragments = new ArrayList<>(); // 供ViewPager使用
     private final String[] imageArray = {"assets://image1.jpg", "assets://image2.jpg", "assets://image3.jpg", "assets://image4.jpg", "assets://image5.jpg"};
@@ -129,7 +129,7 @@ public class CombinedCrediDetails extends Fragment {
 
                         Bundle b = new Bundle();
                         b.putInt("id", id);
-                        b.putString("vote", vote_average+"");
+                        b.putString("vote", vote_average + "");
                         b.putString("title", title);
                         b.putString("poster", poster_path);
 
@@ -217,27 +217,31 @@ public class CombinedCrediDetails extends Fragment {
 
     private void updateIndicatorTv() {
         int totalNum = fragments.size();
-        int currentItem = viewPager.getCurrentItem() + 1;
-        currentPage.setText(currentItem+"");
+        int currentItem;
+        if (dataSource.isEmpty())
+            currentItem = 0;
+        else
+            currentItem = viewPager.getCurrentItem() + 1;
+        currentPage.setText(currentItem + "");
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
-                ObjectAnimator.ofFloat(currentPage,"translationX",-25,0),
-                ObjectAnimator.ofFloat(currentPage,"alpha",0,1));
+                ObjectAnimator.ofFloat(currentPage, "translationX", -25, 0),
+                ObjectAnimator.ofFloat(currentPage, "alpha", 0, 1));
         animatorSet.setDuration(250);
         animatorSet.start();
-        allPages.setText("/"+totalNum);
+        allPages.setText("/" + totalNum);
     }
 
-    public void animation(){
+    public void animation() {
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
-                ObjectAnimator.ofFloat(currentPage,"translationX",-25,0),
-                ObjectAnimator.ofFloat(currentPage,"alpha",0,1),
-                ObjectAnimator.ofFloat(allPages,"translationX",25,0),
-                ObjectAnimator.ofFloat(allPages,"alpha",0,1),
-                ObjectAnimator.ofFloat(viewPager,"alpha",0,1)
+                ObjectAnimator.ofFloat(currentPage, "translationX", -25, 0),
+                ObjectAnimator.ofFloat(currentPage, "alpha", 0, 1),
+                ObjectAnimator.ofFloat(allPages, "translationX", 25, 0),
+                ObjectAnimator.ofFloat(allPages, "alpha", 0, 1),
+                ObjectAnimator.ofFloat(viewPager, "alpha", 0, 1)
         );
         animatorSet.setDuration(400);
         animatorSet.start();

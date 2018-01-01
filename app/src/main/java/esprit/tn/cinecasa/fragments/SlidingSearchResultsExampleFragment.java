@@ -39,7 +39,9 @@ import java.util.List;
 
 import esprit.tn.cinecasa.DetailsActivity;
 import esprit.tn.cinecasa.adapters.RecyclerAdapter;
+import esprit.tn.cinecasa.entities.Actor;
 import esprit.tn.cinecasa.entities.Movie;
+import esprit.tn.cinecasa.entities.TVShow;
 import esprit.tn.cinecasa.utils.AppController;
 import esprit.tn.cinecasa.utils.Context;
 import esprit.tn.cinecasa.utils.MultiSearch;
@@ -64,6 +66,7 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
     private boolean created = true;
     private View v;
     private static boolean CURRENT_TYPE = true;
+
     public SlidingSearchResultsExampleFragment() {
         // Required empty public constructor
     }
@@ -76,12 +79,11 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
         pDialog.setCancelable(false);
         searchResult = new ArrayList<>();
 
-        if(esprit.tn.cinecasa.utils.Context.SELECTED_TYPE == CURRENT_TYPE){
+        if (esprit.tn.cinecasa.utils.Context.SELECTED_TYPE == CURRENT_TYPE) {
             FragmentManager fragmentManager = this.getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.containerScroll, new GenresMoviesFragment(), "GenresMoviesFragment").commitAllowingStateLoss();
 
-        }
-        else {
+        } else {
             FragmentManager fragmentManager = this.getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.containerScroll, new GenresTVShowsFragment(), "GenresTVShowsFragment").commitAllowingStateLoss();
 
@@ -162,8 +164,21 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
 
 
                 MultiSearch a = (MultiSearch) searchSuggestion;
-                getMovie("https://api.themoviedb.org/3/movie/" + a.getId() + "?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US");
-                ;
+                switch (a.getMediaType()) {
+                    case "person":
+                        esprit.tn.cinecasa.utils.Context.ACTOR_ID = a.getId();
+                        esprit.tn.cinecasa.utils.Context.selected = 2;
+                        Intent intent = new Intent(getContext(), DetailsActivity.class);
+                        startActivityNoAnimation(intent);
+                        break;
+                    case "tv":
+                        getTVShow("https://api.themoviedb.org/3/tv/" + a.getId() + "?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US");
+                        break;
+                    default:
+                        getMovie("https://api.themoviedb.org/3/movie/" + a.getId() + "?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US");
+                        break;
+                }
+
 
                 Log.d(TAG, "onSuggestionClicked()");
 
@@ -176,8 +191,9 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
 
                 String urlJsonObj = "https://api.themoviedb.org/3/search/multi?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&include_adult=false&query=";
                 query = query.replace(" ", "%20");
-                makeJsonObjectRequest(urlJsonObj + query);
                 mSearchView.showProgress();
+                mSearchView.clearSuggestions();
+                makeJsonObjectRequest(urlJsonObj + query);
 
 //                DataHelper.findColors(getActivity(), query,
 //                        new DataHelper.OnFindColorsListener() {
@@ -363,6 +379,7 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
 
                     JSONArray results = response.getJSONArray("results");
 
+                    searchResult.clear();
                     for (int i = 0; i < results.length(); i++) {
 
                         JSONObject multiSrch = (JSONObject) results.get(i);
@@ -395,11 +412,13 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
                                     multiSrch.getString("release_date"));
 
                         }
-                        searchResult.add(m);
+
+                        if (!m.getImage().isEmpty() && !m.getName().isEmpty())
+                            searchResult.add(m);
 
                     }
-                    mSearchView.clearSuggestions();
                     mSearchView.swapSuggestions(searchResult);
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -467,6 +486,81 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
                             "Error: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
                 }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                // hide the progress dialog
+                hidepDialog();
+            }
+        });
+        // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+    private void getTVShow(String url) {
+
+        showpDialog();
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject tvshow) {
+                Log.d(TAG, tvshow.toString());
+
+                try {
+
+                    String vote_count = tvshow.getString("vote_count");
+                    int id = tvshow.getInt("id");
+                    Double vote_average = tvshow.getDouble("vote_average");
+                    String name = tvshow.getString("name");
+                    Double popularity = tvshow.getDouble("popularity");
+                    String poster_path = "https://image.tmdb.org/t/p/w300" + tvshow.getString("poster_path");
+                    String original_language = tvshow.getString("original_language");
+                    String original_name = tvshow.getString("original_name");
+                    String genre_ids = null;
+                    String origin_country = tvshow.getString("origin_country");
+                    String backdrop_path = "https://image.tmdb.org/t/p/w500" + tvshow.getString("backdrop_path");
+                    String overview = tvshow.getString("overview");
+                    String first_air_date = tvshow.getString("first_air_date");
+
+                    final TVShow tvshow1 = new TVShow(genre_ids,
+                            original_name,
+                            name,
+                            popularity,
+                            origin_country,
+                            vote_count,
+                            first_air_date,
+                            backdrop_path,
+                            original_language,
+                            id,
+                            vote_average,
+                            overview,
+                            poster_path);
+                    tvshow1.setOverview(overview);
+                    tvshow1.setPoster_path(poster_path);
+                    tvshow1.setBackdrop_path(backdrop_path);
+
+
+                    esprit.tn.cinecasa.utils.Context.ITEM_TV_SHOW = tvshow1;
+                    esprit.tn.cinecasa.utils.Context.selected = 1;
+                    Intent intent = new Intent(getContext(), DetailsActivity.class);
+                    startActivityNoAnimation(intent);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+                hidepDialog();
+
             }
         }, new Response.ErrorListener() {
 

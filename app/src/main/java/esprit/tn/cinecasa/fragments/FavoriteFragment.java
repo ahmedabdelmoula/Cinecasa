@@ -47,7 +47,7 @@ public class FavoriteFragment extends Fragment {
     private static String TAG = FavoriteFragment.class.getSimpleName();
     private View view;
     private List<Actor> actors;
-    private List<Fragment> fragments;
+    private List<Fragment> fragments, beforeFragments;
     private ViewPager pager;
     private SmartTabLayout tabs;
     private Adapter adapter;
@@ -64,6 +64,8 @@ public class FavoriteFragment extends Fragment {
 
 
         fragments = new ArrayList<>();
+        beforeFragments = new ArrayList<>();
+
         adapter = new Adapter(getChildFragmentManager(), fragments);
         pager.setAdapter(adapter);
 
@@ -170,7 +172,7 @@ public class FavoriteFragment extends Fragment {
                             response.getString("biography"),
                             response.getDouble("popularity"),
                             response.getString("place_of_birth"),
-                            "https://image.tmdb.org/t/p/w300/"+response.getString("profile_path"),
+                            "https://image.tmdb.org/t/p/w300/" + response.getString("profile_path"),
                             response.getBoolean("adult"),
                             response.getString("imdb_id"),
                             response.getString("homepage"),
@@ -194,17 +196,17 @@ public class FavoriteFragment extends Fragment {
 
                     ActorProfileFragment actorProfileFragment = new ActorProfileFragment();
                     actorProfileFragment.setArguments(b);
-                    fragments.add(actorProfileFragment);
-                    adapter.notifyDataSetChanged();
+                    beforeFragments.add(actorProfileFragment);
                     count++;
 
                     if (count == max) {
+                        for (Fragment f : beforeFragments)
+                            fragments.add(f);
                         adapter.notifyDataSetChanged();
                         pDialog.hide();
                         tabProvider = getTabProvider();
                         tabs.setCustomTabView(tabProvider);
                         tabs.setViewPager(pager);
-                        adapter.notifyDataSetChanged();
                     }
 
                 } catch (JSONException e) {
@@ -246,17 +248,17 @@ public class FavoriteFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private SmartTabLayout.TabProvider getTabProvider(){
+    private SmartTabLayout.TabProvider getTabProvider() {
         return new SmartTabLayout.TabProvider() {
             @Override
             public View createTabView(ViewGroup container, int position, PagerAdapter adapter) {
                 View v = LayoutInflater.from(getContext()).inflate(R.layout.tab, container, false);
                 RoundedImageView roundedImg = (RoundedImageView) v.findViewById(R.id.item_image);
-                        Picasso
-                                .with(getContext())
-                                .load(actors.get(position).getImage())
-                                .transform(new CircleTransform())
-                                .into(roundedImg);
+                Picasso
+                        .with(getContext())
+                        .load(actors.get(position).getImage())
+                        .transform(new CircleTransform())
+                        .into(roundedImg);
                 return v;
             }
         };

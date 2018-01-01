@@ -31,4 +31,5 @@ public class Context {
     public static int selected = 0;
     public static boolean registerSelected = false;
     public static boolean FB_LOGIN = false;
+    public static SplashScreen SS;
 }

@@ -62,7 +62,7 @@ public class ActorDetailsFragment extends Fragment {
     private ProgressDialog pDialog;
     private static String TAG = ActorDetailsFragment.class.getSimpleName();
     private AutoResizeTextView actorName;
-    private TextView underName;
+    private TextView underName, actorPopularity;
     private Button favoriteButton;
     private CircularImageView actorImage;
     private boolean backImage;
@@ -84,6 +84,7 @@ public class ActorDetailsFragment extends Fragment {
         actorImage = (CircularImageView) view.findViewById(R.id.actor_image);
         relativeLayout = (RelativeLayout) view.findViewById(R.id.background);
         mTabLayout = (CommonTabLayout) view.findViewById(R.id.common_tab);
+        actorPopularity = (TextView) view.findViewById(R.id.popularity);
 
         mTabEntities.add(new TabEntity("Details"));
         mTabEntities.add(new TabEntity("Movies"));
@@ -200,6 +201,7 @@ public class ActorDetailsFragment extends Fragment {
 
                         actorName.setText(actor.getName());
                         underName.setText(actor.getPlaceOfBirth());
+                        actorPopularity.setText(actor.getPopularity().toString().substring(0, actor.getPopularity().toString().indexOf(".")+2));
 
                         Bundle b = new Bundle();
                         b.putString("mediaType", "Movie");

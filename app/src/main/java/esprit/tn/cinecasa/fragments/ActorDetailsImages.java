@@ -103,6 +103,8 @@ public class ActorDetailsImages extends Fragment {
                         m.setPoster_path(poster_path);
                         dataSource.add(m);
                     }
+                    if (dataSource.isEmpty())
+                        Toast.makeText(getContext(), "There's Nothing to Show", Toast.LENGTH_LONG);
 
                     RecyclerImagesAdapter.setData(dataSource);
                     recyclerView.setAdapter(adapter);

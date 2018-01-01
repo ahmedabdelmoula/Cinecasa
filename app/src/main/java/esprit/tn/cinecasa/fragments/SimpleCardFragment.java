@@ -19,7 +19,10 @@ public class SimpleCardFragment extends Fragment {
 
     public static SimpleCardFragment getInstance(String title) {
         SimpleCardFragment sf = new SimpleCardFragment();
-        sf.mTitle = title;
+        if (title.equals(""))
+            sf.mTitle = "There's Nothing to Show";
+        else
+            sf.mTitle = title;
         return sf;
     }
 
@@ -43,20 +46,20 @@ public class SimpleCardFragment extends Fragment {
         super.onResume();
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
-                ObjectAnimator.ofFloat(bio,"translationX",-25,0),
-                ObjectAnimator.ofFloat(bio,"alpha",0,1),
-                ObjectAnimator.ofFloat(card_title_tv,"alpha",0,1));
+                ObjectAnimator.ofFloat(bio, "translationX", -25, 0),
+                ObjectAnimator.ofFloat(bio, "alpha", 0, 1),
+                ObjectAnimator.ofFloat(card_title_tv, "alpha", 0, 1));
         animatorSet.setDuration(1000);
         animatorSet.start();
     }
 
-    public void animation(){
+    public void animation() {
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
-                ObjectAnimator.ofFloat(bio,"translationX",-25,0),
-                ObjectAnimator.ofFloat(bio,"alpha",0,1),
-                ObjectAnimator.ofFloat(card_title_tv,"alpha",0,1));
+                ObjectAnimator.ofFloat(bio, "translationX", -25, 0),
+                ObjectAnimator.ofFloat(bio, "alpha", 0, 1),
+                ObjectAnimator.ofFloat(card_title_tv, "alpha", 0, 1));
         animatorSet.setDuration(1000);
         animatorSet.start();
     }

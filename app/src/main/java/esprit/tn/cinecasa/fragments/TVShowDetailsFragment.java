@@ -126,7 +126,7 @@ public class TVShowDetailsFragment extends Fragment {
 
             String date = Context.ITEM_TV_SHOW.getFirst_air_date();
             String[] splitted = date.split("-");
-            txtfirst_air_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1])] + " " + splitted[0]);
+            txtfirst_air_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1])-1] + " " + splitted[0]);
         } catch (Exception e) {
             txtfirst_air_date.setText(Context.ITEM_MOVIE.getRelease_date());
         }

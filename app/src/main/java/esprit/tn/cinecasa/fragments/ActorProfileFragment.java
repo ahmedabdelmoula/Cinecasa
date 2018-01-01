@@ -33,6 +33,9 @@ public class ActorProfileFragment extends Fragment {
     Button removeFavorite, moreDetails;
     private ProgressDialog pDialog;
     private static String TAG = ActorProfileFragment.class.getSimpleName();
+    String months[] = {"January", "February", "March", "April",
+            "May", "June", "July", "August", "September",
+            "October", "November", "December"};
 
     public ActorProfileFragment() {
         // Required empty public constructor
@@ -52,12 +55,27 @@ public class ActorProfileFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
 
         try {
-            actorName.setText(getArguments().getString("name"));
+
+            String date = getArguments().getString("birthday");
+            String[] splitted = date.split("-");
+            birthday.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1]) - 1] + " " + splitted[0]);
+        } catch (Exception e) {
             birthday.setText(getArguments().getString("birthday"));
-            place.setText(getArguments().getString("place_of_birth"));
-            biography.setText(getArguments().getString("biography"));
+        }
+        try {
+            actorName.setText(getArguments().getString("name"));
         } catch (NullPointerException e) {
             actorName.setText("None");
+        }
+        try {
+            biography.setText(getArguments().getString("biography"));
+        } catch (NullPointerException e) {
+            biography.setText("None");
+        }
+        try {
+            place.setText(getArguments().getString("place_of_birth"));
+        } catch (NullPointerException e) {
+            place.setText("None");
         }
 
         removeFavorite.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +116,7 @@ public class ActorProfileFragment extends Fragment {
 
                 hidepDialog();
                 Context.MAIN_ACTIVITY.refreshFavorite();
+
             }
         }, new Response.ErrorListener() {
 
