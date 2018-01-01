@@ -163,6 +163,7 @@ public class MovieDetailsFragment extends Fragment {
         Glide.with(getContext())
                 .load(url)    // you can pass url too
                 .asBitmap()
+                .placeholder(R.drawable.ph)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

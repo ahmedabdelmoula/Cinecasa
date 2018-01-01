@@ -153,11 +153,11 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
                         movie1.setBackdrop_path(backdrop_path);
 
                         if (i == 0) {
-                            System.out.print("+++"+big_img.getMaxWidth()+"++"+big_img.getMaxWidth()+"++"+big_img.getMeasuredWidth());
                             Glide
                                     .with(getContext())
                                     .load(backdrop_path)
                                     .asBitmap()
+                                    .placeholder(R.drawable.ph)
                                     .skipMemoryCache( true )
                                     .into(big_img);
                             big_img.setOnClickListener(new View.OnClickListener() {

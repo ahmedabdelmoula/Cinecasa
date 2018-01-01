@@ -141,6 +141,7 @@ public class TVShowDetailsFragment extends Fragment {
         Glide.with(getContext())
                 .load(Context.ITEM_TV_SHOW.getPoster_path())    // you can pass url too
                 .asBitmap()
+                .placeholder(R.drawable.ph)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

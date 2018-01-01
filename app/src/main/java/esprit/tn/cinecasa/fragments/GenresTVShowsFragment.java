@@ -66,6 +66,7 @@ public class GenresTVShowsFragment extends Fragment {
         hashMap.put("10749",R.id.recycler_view_Romance);
         hashMap.put("878",R.id.recycler_view_Science_Fiction);
         makeJsonObjectRequest(urlJson);
+
         return view;
     }
     private void makeJsonObjectRequest(String urlJson) {

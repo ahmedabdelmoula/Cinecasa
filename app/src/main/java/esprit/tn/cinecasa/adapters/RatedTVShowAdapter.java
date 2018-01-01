@@ -40,7 +40,7 @@ public class RatedTVShowAdapter extends RecyclerView.Adapter<RatedTVShowAdapter.
                     int position = getAdapterPosition();
 
                     esprit.tn.cinecasa.utils.Context.ITEM_TV_SHOW = tvShowList.get(position);
-                    esprit.tn.cinecasa.utils.Context.selected = 0;
+                    esprit.tn.cinecasa.utils.Context.selected = 1;
                     Intent intent = new Intent(mContext, DetailsActivity.class);
                     startActivityNoAnimation(intent);
 
@@ -74,7 +74,7 @@ public class RatedTVShowAdapter extends RecyclerView.Adapter<RatedTVShowAdapter.
         TVShow tvShow = tvShowList.get(position);
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(tvShow.getPoster_path()).into(holder.thumbnail);
+        Glide.with(mContext).load(tvShow.getPoster_path()).placeholder(R.drawable.ph).into(holder.thumbnail);
 
 
     }

@@ -83,6 +83,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 .with(con)
                 .load(data.get(i).getPoster_path())
                 .asBitmap()
+                .placeholder(R.drawable.ph)
                 .skipMemoryCache(true)
                 .into(viewHolder.itemImage);
 //        Glide

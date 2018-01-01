@@ -205,6 +205,7 @@ public class ActorDetailsFragment extends Fragment {
                         Picasso
                                 .with(getContext())
                                 .load(actor.getImage())
+                                .placeholder(R.drawable.celebph)
                                 .into(actorImage);
 
                         actorName.setText(actor.getName());

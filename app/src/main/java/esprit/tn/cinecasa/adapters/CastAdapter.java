@@ -90,6 +90,7 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.MyViewHolder> 
         Glide.with(mContext)
                 .load(cast.getProfile_path())    // you can pass url too
                 .asBitmap()
+                .placeholder(R.drawable.celebph)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
