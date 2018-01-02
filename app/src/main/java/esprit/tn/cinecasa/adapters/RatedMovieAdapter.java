@@ -76,7 +76,7 @@ public class RatedMovieAdapter extends RecyclerView.Adapter<RatedMovieAdapter.My
         Movie movie = movieList.get(position);
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(movie.getPoster_path()).into(holder.thumbnail);
+        Glide.with(mContext).load(movie.getPoster_path()).placeholder(R.drawable.ph).into(holder.thumbnail);
 
 
     }

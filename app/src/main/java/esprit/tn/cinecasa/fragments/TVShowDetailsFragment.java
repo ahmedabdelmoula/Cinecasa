@@ -142,6 +142,7 @@ public class TVShowDetailsFragment extends Fragment {
         Glide.with(getContext())
                 .load(Context.ITEM_TV_SHOW.getPoster_path())    // you can pass url too
                 .asBitmap()
+                .placeholder(R.drawable.ph)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -356,13 +357,13 @@ public class TVShowDetailsFragment extends Fragment {
                             dataSource1.add(value);
                         }
 
-                        if (dataSource.contains(String.valueOf(Context.ITEM_MOVIE.getId()))) {
+                        if (dataSource.contains(String.valueOf(Context.ITEM_TV_SHOW.getId()))) {
                             txtratevalue.setVisibility(View.GONE);
                             btrate.setVisibility(View.GONE);
                             star.setVisibility(View.VISIBLE);
                             rating.setVisibility(View.VISIBLE);
-                            int pos = dataSource.indexOf(String.valueOf(Context.ITEM_MOVIE.getId()));
-                            rating.setText("Your Rating : " + dataSource1.get(pos));
+                            int pos=dataSource.indexOf(String.valueOf(Context.ITEM_TV_SHOW.getId()));
+                            rating.setText("Your Rating : "+dataSource1.get(pos));
                         }
 
                     }

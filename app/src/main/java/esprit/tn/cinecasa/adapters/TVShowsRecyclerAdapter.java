@@ -69,6 +69,7 @@ public class TVShowsRecyclerAdapter extends RecyclerView.Adapter<TVShowsRecycler
                 .with(con)
                 .load(data.get(i).getPoster_path())
                 .asBitmap()
+                .placeholder(R.drawable.ph)
                 .skipMemoryCache( true )
                 .into(viewHolder.itemImage);
     }

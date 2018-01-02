@@ -42,6 +42,7 @@ public class CommonFragment extends Fragment implements DragLayout.GotoDetailLis
         Glide
                 .with(rootView.getContext())
                 .load(getArguments().getString("poster"))
+                .placeholder(R.drawable.ph)
                 .into(imageView);
         address5 = (TextView) rootView.findViewById(R.id.address4);
         rate = (TextView) rootView.findViewById(R.id.rate_value);

@@ -155,6 +155,7 @@ public class TVShowsFragment extends Fragment {
                                     .with(getContext())
                                     .load(backdrop_path)
                                     .asBitmap()
+                                    .placeholder(R.drawable.ph)
                                     .skipMemoryCache( true )
                                     .into(big_img);
                             big_img.setOnClickListener(new View.OnClickListener() {

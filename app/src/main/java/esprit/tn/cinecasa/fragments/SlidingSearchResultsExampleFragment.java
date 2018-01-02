@@ -311,6 +311,7 @@ public class SlidingSearchResultsExampleFragment extends BaseExampleFragment {
                 Glide
                         .with(getContext())
                         .load("https://image.tmdb.org/t/p/w75" + multiSearch.getImage())
+                        .placeholder(R.drawable.ph)
                         .into(leftIcon);
 //                leftIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
 //                        R.drawable.maleficent_31, null));

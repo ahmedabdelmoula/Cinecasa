@@ -311,6 +311,7 @@ public class FavoriteFragment extends Fragment {
                 Picasso
                         .with(getContext())
                         .load(actors.get(position).getImage())
+                        .placeholder(R.drawable.celebph)
                         .transform(new CircleTransform())
                         .into(roundedImg);
                 return v;
