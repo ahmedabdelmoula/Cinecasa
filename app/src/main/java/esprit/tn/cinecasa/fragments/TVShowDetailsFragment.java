@@ -59,34 +59,35 @@ import esprit.tn.cinecasa.utils.ExpandableHeightListView;
  */
 
 public class TVShowDetailsFragment extends Fragment {
-    private String urlJsonAddReview = "http://idol-design.com/Cinecasa/Scripts/AddReview.php?id_movie="+Context.ITEM_TV_SHOW.getId()+"&username="+Context.CURRENT_USER.getName()+"&review=";
-    private String urlJsonLoadReview = "http://idol-design.com/Cinecasa/Scripts/SelectReviewByMovieId.php?id_movie="+Context.ITEM_TV_SHOW.getId();
+    private String urlJsonAddReview = "http://idol-design.com/Cinecasa/Scripts/AddReview.php?id_movie=" + Context.ITEM_TV_SHOW.getId() + "&username=" + Context.CURRENT_USER.getName() + "&review=";
+    private String urlJsonLoadReview = "http://idol-design.com/Cinecasa/Scripts/SelectReviewByMovieId.php?id_movie=" + Context.ITEM_TV_SHOW.getId();
     private List<Review> listReviewint;
     ExpandableHeightListView listIntReview;
     private View view;
     private RecyclerView recyclerView;
     private CastAdapter castadapter;
     private List<Cast> castList;
-    Fragment fragment=this;
+    Fragment fragment = this;
     RatingBar txtratevalue;
     ShadowImageView ivposter;
     AutoResizeTextView txttitle;
-    Button btrate,btreview;
+    Button btrate, btreview;
     ImageView star;
     EditText reviewtxt;
-    TextView txtname,txtvote_count,txtvote_average,txtpopularity,txtoriginal_name,txtoverview,txtfirst_air_date,rating,titlerev;
-    private String urlJsongetRated="http://idol-design.com/Cinecasa/Scripts/SelectRatedByUserUid.php?uid_user="+Context.CURRENT_USER.getUid()+"&type=tv";
+    TextView txtname, txtvote_count, txtvote_average, txtpopularity, txtoriginal_name, txtoverview, txtfirst_air_date, rating, titlerev;
+    private String urlJsongetRated = "http://idol-design.com/Cinecasa/Scripts/SelectRatedByUserUid.php?uid_user=" + Context.CURRENT_USER.getUid() + "&type=tv";
     String months[] = {"January", "February", "March", "April",
             "May", "June", "July", "August", "September",
             "October", "November", "December"};
-    private String urlSession="https://api.themoviedb.org/3/authentication/guest_session/new?api_key=7c408d3e3e9aec97d01604333744b592";
+    private String urlSession = "https://api.themoviedb.org/3/authentication/guest_session/new?api_key=7c408d3e3e9aec97d01604333744b592";
     private String urlJsonCast = "https://api.themoviedb.org/3/tv/";
-    private String urlJsonCastPart2="/credits?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
+    private String urlJsonCastPart2 = "/credits?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private static String TAG = TVShowDetailsFragment.class.getSimpleName();
     private ProgressDialog pDialog;
     String session_id;
     List<String> dataSource = new ArrayList<>();
     List<String> dataSource1 = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tvshowdetails, container, false);
@@ -97,7 +98,7 @@ public class TVShowDetailsFragment extends Fragment {
                 .load(R.drawable.shadow)
                 .into(shadow);
 
-        urlJsonCast=urlJsonCast+ Context.ITEM_TV_SHOW.getId()+urlJsonCastPart2;
+        urlJsonCast = urlJsonCast + Context.ITEM_TV_SHOW.getId() + urlJsonCastPart2;
         makeJsonObjectCastRequest();
         makeJsonObjectInternalReviewRequest();
         listIntReview = (ExpandableHeightListView) view.findViewById(R.id.listintReview);
@@ -120,14 +121,14 @@ public class TVShowDetailsFragment extends Fragment {
         rating = (TextView) view.findViewById(R.id.ratingtxt);
         star = (ImageView) view.findViewById(R.id.starrr);
         txtname.setText(Context.ITEM_TV_SHOW.getName());
-        txtvote_count.setText("Vote Count : "+ Context.ITEM_TV_SHOW.getVote_count());
+        txtvote_count.setText("Vote Count : " + Context.ITEM_TV_SHOW.getVote_count());
         txtvote_average.setText(Context.ITEM_TV_SHOW.getVote_average().toString());
 
         try {
 
             String date = Context.ITEM_TV_SHOW.getFirst_air_date();
             String[] splitted = date.split("-");
-            txtfirst_air_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1])-1] + " " + splitted[0]);
+            txtfirst_air_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1]) - 1] + " " + splitted[0]);
         } catch (Exception e) {
             txtfirst_air_date.setText(Context.ITEM_MOVIE.getRelease_date());
         }
@@ -183,13 +184,22 @@ public class TVShowDetailsFragment extends Fragment {
                     for (int i = 0; i < results.length(); i++) {
 
                         JSONObject cast = (JSONObject) results.get(i);
-                        Cast cast1=new Cast(cast.getString("character"), cast.getString("credit_id"), cast.getInt("gender"), cast.getInt("id"), cast.getString("name"), cast.getInt("order"), "https://image.tmdb.org/t/p/w300"+cast.getString("profile_path"));
+                        Object gender = cast.get("gender");
+
+                        Cast cast1 = new Cast(
+                                cast.getString("character"),
+                                cast.getString("credit_id"),
+                                gender instanceof Integer ? ((Integer) gender) : 0,
+                                cast.getInt("id"),
+                                cast.getString("name"),
+                                cast.getInt("order"),
+                                "https://image.tmdb.org/t/p/w300" + cast.getString("profile_path"));
 
                         dataSource.add(cast1);
 
                     }
-                    castList=dataSource;
-                    castadapter  = new CastAdapter(getActivity(),castList);
+                    castList = dataSource;
+                    castadapter = new CastAdapter(getActivity(), castList);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setAdapter(castadapter);
@@ -222,7 +232,7 @@ public class TVShowDetailsFragment extends Fragment {
     private void getSession() {
 
 
-        StringRequest strReq = new StringRequest(Request.Method.GET,urlSession, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, urlSession, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -256,9 +266,9 @@ public class TVShowDetailsFragment extends Fragment {
 
     }
 
-    private void rate()  {
+    private void rate() {
 
-        StringRequest strReq = new StringRequest(Request.Method.POST,"https://api.themoviedb.org/3/movie/"+Context.ITEM_TV_SHOW.getId()+"/rating?guest_session_id="+session_id+"&api_key=7c408d3e3e9aec97d01604333744b592", new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, "https://api.themoviedb.org/3/movie/" + Context.ITEM_TV_SHOW.getId() + "/rating?guest_session_id=" + session_id + "&api_key=7c408d3e3e9aec97d01604333744b592", new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -267,7 +277,7 @@ public class TVShowDetailsFragment extends Fragment {
 
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    Toast.makeText(getContext(),jObj.getString("status_message"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), jObj.getString("status_message"), Toast.LENGTH_LONG).show();
                     addRated();
 
                 } catch (JSONException e) {
@@ -290,7 +300,7 @@ public class TVShowDetailsFragment extends Fragment {
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<>();
-                String s=String.valueOf(txtratevalue.getRating());
+                String s = String.valueOf(txtratevalue.getRating());
                 params.put("value", s);
 
 
@@ -302,7 +312,6 @@ public class TVShowDetailsFragment extends Fragment {
         // Adding request to request queue
         strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq);
-
 
 
     }
@@ -328,8 +337,7 @@ public class TVShowDetailsFragment extends Fragment {
                 try {
                     if (!response.getBoolean("error")) {
                         JSONObject result = (JSONObject) response.get("result");
-                        if (result.get("id_rated") instanceof JSONArray)
-                        {
+                        if (result.get("id_rated") instanceof JSONArray) {
                             dataSource = new ArrayList<>();
                             dataSource1 = new ArrayList<>();
                             JSONArray ids_rated = (JSONArray) result.get("id_rated");
@@ -339,9 +347,7 @@ public class TVShowDetailsFragment extends Fragment {
                                 dataSource.add(idrated);
                                 dataSource1.add((String) values.get(i));
                             }
-                        }
-                        else
-                        {
+                        } else {
                             dataSource = new ArrayList<>();
                             dataSource1 = new ArrayList<>();
                             String id_rated = (String) result.get("id_rated");
@@ -355,8 +361,8 @@ public class TVShowDetailsFragment extends Fragment {
                             btrate.setVisibility(View.GONE);
                             star.setVisibility(View.VISIBLE);
                             rating.setVisibility(View.VISIBLE);
-                            int pos=dataSource.indexOf(String.valueOf(Context.ITEM_MOVIE.getId()));
-                            rating.setText("Your Rating : "+dataSource1.get(pos));
+                            int pos = dataSource.indexOf(String.valueOf(Context.ITEM_MOVIE.getId()));
+                            rating.setText("Your Rating : " + dataSource1.get(pos));
                         }
 
                     }
@@ -386,15 +392,15 @@ public class TVShowDetailsFragment extends Fragment {
 
 
     }
-    void addRated(){
-        StringRequest strReq = new StringRequest(Request.Method.GET,"http://idol-design.com/Cinecasa/Scripts/AddRated.php?uid_user="+Context.CURRENT_USER.getUid()+"&id_rated="+String.valueOf((Context.ITEM_TV_SHOW.getId()))+"&type=tv&value="+String.valueOf(txtratevalue.getRating()*2), new Response.Listener<String>() {
+
+    void addRated() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, "http://idol-design.com/Cinecasa/Scripts/AddRated.php?uid_user=" + Context.CURRENT_USER.getUid() + "&id_rated=" + String.valueOf((Context.ITEM_TV_SHOW.getId())) + "&type=tv&value=" + String.valueOf(txtratevalue.getRating() * 2), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Rate Response: " + response.toString());
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.detach(fragment).attach(fragment).commit();
-
 
 
             }
@@ -407,7 +413,7 @@ public class TVShowDetailsFragment extends Fragment {
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
-        }) ;
+        });
 
         // Adding request to request queue
 
@@ -430,8 +436,7 @@ public class TVShowDetailsFragment extends Fragment {
                         listIntReview.setVisibility(view.VISIBLE);
                         JSONObject result = (JSONObject) response.get("result");
 
-                        if (result.get("username") instanceof JSONArray)
-                        {
+                        if (result.get("username") instanceof JSONArray) {
                             List<Review> dataSource = new ArrayList<>();
                             JSONArray usernames = (JSONArray) result.get("username");
                             JSONArray reviews = (JSONArray) result.get("review");
@@ -443,11 +448,9 @@ public class TVShowDetailsFragment extends Fragment {
                             listReviewint = dataSource;
                             listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
                             listIntReview.setExpanded(true);
-                        }
-                        else
-                        {
+                        } else {
                             List<Review> dataSource = new ArrayList<>();
-                            Review review = new Review((String) result.get("username"),(String) result.get("review"));
+                            Review review = new Review((String) result.get("username"), (String) result.get("review"));
                             dataSource.add(review);
                             listReviewint = dataSource;
                             listIntReview.setAdapter(new ReviewAdapter(getContext(), R.layout.review_item, listReviewint));
@@ -475,8 +478,8 @@ public class TVShowDetailsFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(jsonObjReq, "hello");
     }
 
-    void AddReview(){
-        StringRequest strReq = new StringRequest(Request.Method.GET,urlJsonAddReview+reviewtxt.getText().toString().trim(), new Response.Listener<String>() {
+    void AddReview() {
+        StringRequest strReq = new StringRequest(Request.Method.GET, urlJsonAddReview + reviewtxt.getText().toString().trim(), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -507,7 +510,6 @@ public class TVShowDetailsFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(strReq);
 
     }
-
 
 
 }

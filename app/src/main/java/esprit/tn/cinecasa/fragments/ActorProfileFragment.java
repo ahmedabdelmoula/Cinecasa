@@ -114,8 +114,10 @@ public class ActorProfileFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
 
+                CenterFabActivity main = (CenterFabActivity) getActivity();
+                main.reloadFav();
+
                 hidepDialog();
-                Context.MAIN_ACTIVITY.refreshFavorite();
 
             }
         }, new Response.ErrorListener() {
@@ -128,6 +130,7 @@ public class ActorProfileFragment extends Fragment {
             }
         });
 
+        jsonObjReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 

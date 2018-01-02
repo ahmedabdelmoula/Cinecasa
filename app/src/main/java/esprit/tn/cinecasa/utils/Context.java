@@ -5,6 +5,7 @@ import esprit.tn.cinecasa.entities.Actor;
 import esprit.tn.cinecasa.entities.Movie;
 import esprit.tn.cinecasa.entities.TVShow;
 import esprit.tn.cinecasa.entities.User;
+import esprit.tn.cinecasa.fragments.FavoriteFragment;
 
 /**
  * Created by ahmed on 01-Nov-17.
@@ -32,4 +33,6 @@ public class Context {
     public static boolean registerSelected = false;
     public static boolean FB_LOGIN = false;
     public static SplashScreen SS;
+    public static boolean FAV_CHANGED = false;
+    public static FavoriteFragment FAV_FRAG;
 }

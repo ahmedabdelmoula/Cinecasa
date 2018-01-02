@@ -210,7 +210,11 @@ public class CombinedCrediDetails2 extends Fragment {
 
     private void updateIndicatorTv() {
         int totalNum = fragments.size();
-        int currentItem = viewPager.getCurrentItem() + 1;
+        int currentItem;
+        if (dataSource.isEmpty())
+            currentItem = 0;
+        else
+            currentItem = viewPager.getCurrentItem() + 1;
         currentPage.setText(currentItem+"");
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(

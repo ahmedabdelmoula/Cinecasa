@@ -61,15 +61,11 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
     private String urlJsonObj = "https://api.themoviedb.org/3/movie/top_rated?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private ProgressDialog pDialog;
     private static String TAG = Home2Fragment.class.getSimpleName();
-    ListView listView;
-    CardView cardView0;
     RecyclerView recyclerView;
     RecyclerViewHeader recyclerViewHeader;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter adapter;
-    List<Movie> dataSource;
     RoundedImageView big_img;
-    ScaleTextView type;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,8 +87,8 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
 
-        recyclerView =  (RecyclerView) view.findViewById(R.id.recycler_view);
-        recyclerViewHeader =  (RecyclerViewHeader) view.findViewById(R.id.header);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerViewHeader = (RecyclerViewHeader) view.findViewById(R.id.header);
 
 //        layoutManager = new LinearLayoutManager(getContext());
         layoutManager = new GridLayoutManager(getContext(), 3);
@@ -126,9 +122,9 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
 
                     JSONArray results = response.getJSONArray("results");
 
-                    dataSource = new ArrayList<>();
+
                     ArrayList<Movie> dataSourcee = new ArrayList<>();
-                    // nsob fi movies lkol fi west arraylist
+
                     for (int i = 0; i < results.length() - 1; i++) {
 
                         JSONObject movie = (JSONObject) results.get(i);
@@ -153,12 +149,12 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
                         movie1.setBackdrop_path(backdrop_path);
 
                         if (i == 0) {
-                            System.out.print("+++"+big_img.getMaxWidth()+"++"+big_img.getMaxWidth()+"++"+big_img.getMeasuredWidth());
+                            System.out.print("+++" + big_img.getMaxWidth() + "++" + big_img.getMaxWidth() + "++" + big_img.getMeasuredWidth());
                             Glide
                                     .with(getContext())
                                     .load(backdrop_path)
                                     .asBitmap()
-                                    .skipMemoryCache( true )
+                                    .skipMemoryCache(true)
                                     .into(big_img);
                             big_img.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -173,8 +169,6 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
                         } else {
                             dataSourcee.add(movie1);
                         }
-                        dataSource.add(movie1);
-
                     }
 
                     adapter = new RecyclerAdapter(dataSourcee);

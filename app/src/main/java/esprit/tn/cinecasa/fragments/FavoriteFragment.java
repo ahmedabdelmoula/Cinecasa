@@ -42,7 +42,7 @@ import esprit.tn.cinecasa.utils.Context;
 
 public class FavoriteFragment extends Fragment {
 
-    private String urlJsonObj = "http://idol-design.com/Cinecasa/Scripts/SelectActorsByUserId.php?id_user=1";//+ Context.CONNECTED_USER.getId();
+    private String urlJsonObj = "http://idol-design.com/Cinecasa/Scripts/SelectActorsByUserId.php?id_user=" + Context.CONNECTED_USER.getId();
     private ProgressDialog pDialog;
     private static String TAG = FavoriteFragment.class.getSimpleName();
     private View view;
@@ -59,6 +59,8 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.favorite_fragment, container, false);
 
+        Context.FAV_FRAG = this;
+
         pager = (ViewPager) view.findViewById(R.id.pager);
         tabs = (SmartTabLayout) view.findViewById(R.id.tabs);
 
@@ -73,6 +75,22 @@ public class FavoriteFragment extends Fragment {
         actors = new ArrayList<>();
         makeJsonObjectRequest();
         return view;
+    }
+
+    public void deleteFromFav() {
+        int pos = pager.getCurrentItem();
+        fragments.remove(pos);
+        beforeFragments.remove(pos);
+        adapter.notifyDataSetChanged();
+        actors.remove(pos);
+        tabProvider = getTabProvider();
+        tabs.setCustomTabView(tabProvider);
+        tabs.setViewPager(pager);
+
+        if (adapter.getCount() == pos + 1)
+            pager.setCurrentItem(pos - 2, true);
+        else
+            pager.setCurrentItem(pos - 1, true);
     }
 
     private static class Adapter extends FragmentStatePagerAdapter {
@@ -165,18 +183,53 @@ public class FavoriteFragment extends Fragment {
                 try {
                     // Parsing json object response
 
+                    String birthday;
+                    String biography, placeOfBirth, profilePath, name;
+                    Double popularity;
+
+                    try {
+                        biography = response.getString("biography");
+                    } catch (Exception e) {
+                        biography = "";
+                    }
+                    try {
+                        birthday = response.getString("birthday");
+                    } catch (Exception e) {
+                        birthday = "Unknown";
+                    }
+                    try {
+                        placeOfBirth = response.getString("place_of_birth");
+                    } catch (Exception e) {
+                        placeOfBirth = "Unknown";
+                    }
+                    try {
+                        profilePath = response.getString("profile_path");
+                    } catch (Exception e) {
+                        profilePath = "";
+                    }
+                    try {
+                        name = response.getString("name");
+                    } catch (Exception e) {
+                        name = " ";
+                    }
+                    try {
+                        popularity = response.getDouble("popularity");
+                    } catch (Exception e) {
+                        popularity = 0.00000;
+                    }
                     Actor actor = new Actor(response.getInt("id"),
-                            response.getString("birthday"),
-                            response.getString("deathday"),
+                            birthday,
+                            "None",
                             response.getInt("gender"),
-                            response.getString("biography"),
-                            response.getDouble("popularity"),
-                            response.getString("place_of_birth"),
-                            "https://image.tmdb.org/t/p/w300/" + response.getString("profile_path"),
-                            response.getBoolean("adult"),
-                            response.getString("imdb_id"),
-                            response.getString("homepage"),
-                            response.getString("name"));
+                            biography,
+                            popularity,
+                            placeOfBirth,
+                            "https://image.tmdb.org/t/p/w300/" + profilePath,
+                            false,
+                            "None",
+                            "None",
+                            name);
+
                     actors.add(actor);
 
                     Bundle b = new Bundle();
@@ -195,6 +248,7 @@ public class FavoriteFragment extends Fragment {
                     b.putBoolean("adult", actor.isAdult());
 
                     ActorProfileFragment actorProfileFragment = new ActorProfileFragment();
+                    b.putInt("position", count);
                     actorProfileFragment.setArguments(b);
                     beforeFragments.add(actorProfileFragment);
                     count++;

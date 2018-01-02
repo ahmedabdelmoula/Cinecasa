@@ -10,21 +10,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
-
 import esprit.tn.cinecasa.DetailsActivity;
 import esprit.tn.cinecasa.R;
-import esprit.tn.cinecasa.entities.Movie;
 import esprit.tn.cinecasa.entities.TVShow;
 
 public class TVShowsRecyclerAdapter extends RecyclerView.Adapter<TVShowsRecyclerAdapter.ViewHolder> {
 
-    static List<TVShow> data ;
+    private List<TVShow> data ;
     private Context con;
 
     public TVShowsRecyclerAdapter(List<TVShow> data){
@@ -49,8 +44,6 @@ public class TVShowsRecyclerAdapter extends RecyclerView.Adapter<TVShowsRecycler
                     esprit.tn.cinecasa.utils.Context.selected = 1;
                     Intent intent = new Intent(con, DetailsActivity.class);
                     startActivityNoAnimation(intent);
-
-
                 }
             });
         }
@@ -59,7 +52,6 @@ public class TVShowsRecyclerAdapter extends RecyclerView.Adapter<TVShowsRecycler
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             con.startActivity(intent);
         }
-
     }
 
     @Override
@@ -83,7 +75,6 @@ public class TVShowsRecyclerAdapter extends RecyclerView.Adapter<TVShowsRecycler
 
     @Override
     public int getItemCount() {
-//        return 7;
         return data.size();
     }
 }

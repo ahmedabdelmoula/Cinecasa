@@ -55,7 +55,7 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
     private ActivityCenterFabBinding bind;
     private VpAdapter adapter;
     private FragmentManager fragManager;
-    private Fragment fragHome;
+    private Fragment fragHome, fragFav;
     private Bundle b;
     private static boolean CURRENT_TYPE = true;
     private SessionManager session;
@@ -90,7 +90,7 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
             getSupportActionBar().hide();
 
             initImageLoader();
-            bind.vp.setOffscreenPageLimit(0);
+            bind.vp.setOffscreenPageLimit(4);
             fragManager = getSupportFragmentManager();
 
             b = new Bundle();
@@ -200,6 +200,22 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
         adapter.notifyDataSetChanged();
     }
 
+    public void reloadFav() {
+//        FavoriteFragment favoriteFragment = (FavoriteFragment) adapter.getmFragmentManager().getFragments().get(2);
+        esprit.tn.cinecasa.utils.Context.FAV_FRAG.deleteFromFav();
+    }
+
+    public void fullReloadFav() {
+        fragFav = new FavoriteFragment();
+        for (int k = 0; k < fragments.size(); k++) {
+            if (fragments.get(k) instanceof FavoriteFragment) {
+                fragments.remove(k);
+                fragments.add(k, fragFav);
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -210,6 +226,11 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
         } else if (!esprit.tn.cinecasa.utils.Context.SELECTED_TYPE && esprit.tn.cinecasa.utils.Context.SELECTED_TYPE != CURRENT_TYPE) {
             loadTVShows();
             CURRENT_TYPE = !CURRENT_TYPE;
+        }
+
+        if (esprit.tn.cinecasa.utils.Context.FAV_CHANGED) {
+            fullReloadFav();
+            esprit.tn.cinecasa.utils.Context.FAV_CHANGED = false;
         }
     }
 
@@ -348,15 +369,6 @@ public class CenterFabActivity extends AppCompatActivity implements BaseExampleF
         public FragmentManager getmFragmentManager() {
             return mFragmentManager;
         }
-    }
-
-    public void refreshFavorite() {
-
-        Fragment frg = fragManager.getFragments().get(2);
-        final FragmentTransaction ft = fragManager.beginTransaction();
-        ft.detach(frg);
-        ft.attach(frg);
-        ft.commit();
     }
 
     private void startActivityNoAnimation(Intent intent) {

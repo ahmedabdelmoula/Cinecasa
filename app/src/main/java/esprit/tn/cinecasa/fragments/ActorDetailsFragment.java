@@ -89,7 +89,6 @@ public class ActorDetailsFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
 
 
-
         actorName = (AutoResizeTextView) view.findViewById(R.id.actor_name);
         underName = (TextView) view.findViewById(R.id.under_name);
         favoriteButton = (Button) view.findViewById(R.id.add_favorite);
@@ -127,7 +126,6 @@ public class ActorDetailsFragment extends Fragment {
     private void getActorDetails() {
 
 
-
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 "https://api.themoviedb.org/3/person/" + Context.ACTOR_ID + "?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US",
                 null, new Response.Listener<JSONObject>() {
@@ -136,20 +134,62 @@ public class ActorDetailsFragment extends Fragment {
             public void onResponse(JSONObject response) {
 
                 try {
-                    // Parsing json object response
+
+                    String biography, placeOfBirth, profilePath, name;
+                    Double popularity;
+
+                    try {
+                        biography = response.getString("biography");
+                    } catch (Exception e) {
+                        biography = "";
+                    }
+                    try {
+                        placeOfBirth = response.getString("place_of_birth");
+                    } catch (Exception e) {
+                        placeOfBirth = "Unknown";
+                    }
+                    try {
+                        profilePath = response.getString("profile_path");
+                    } catch (Exception e) {
+                        profilePath = "";
+                    }
+                    try {
+                        name = response.getString("name");
+                    } catch (Exception e) {
+                        name = " ";
+                    }
+                    try {
+                        popularity = response.getDouble("popularity");
+                    } catch (Exception e) {
+                        popularity = 0.00000;
+                    }
+
 
                     actor = new Actor(response.getInt("id"),
-                            response.getString("birthday"),
-                            response.getString("deathday"),
+                            "None",
+                            "None",
                             response.getInt("gender"),
-                            response.getString("biography"),
-                            response.getDouble("popularity"),
-                            response.getString("place_of_birth"),
-                            "https://image.tmdb.org/t/p/w300/" + response.getString("profile_path"),
-                            response.getBoolean("adult"),
-                            response.getString("imdb_id"),
-                            response.getString("homepage"),
-                            response.getString("name"));
+                            biography,
+                            popularity,
+                            placeOfBirth,
+                            "https://image.tmdb.org/t/p/w300/" + profilePath,
+                            false,
+                            "None",
+                            "None",
+                            name);
+
+//                    actor = new Actor(response.getInt("id"),
+//                            response.getString("birthday"),
+//                            response.getString("deathday"),
+//                            response.getInt("gender"),
+//                            response.getString("biography"),
+//                            response.getDouble("popularity"),
+//                            response.getString("place_of_birth"),
+//                            "https://image.tmdb.org/t/p/w300/" + response.getString("profile_path"),
+//                            response.getBoolean("adult"),
+//                            response.getString("imdb_id"),
+//                            response.getString("homepage"),
+//                            response.getString("name"));
 
                     getFav();
 
@@ -209,7 +249,7 @@ public class ActorDetailsFragment extends Fragment {
 
                         actorName.setText(actor.getName());
                         underName.setText(actor.getPlaceOfBirth());
-                        actorPopularity.setText(actor.getPopularity().toString().substring(0, actor.getPopularity().toString().indexOf(".")+2));
+                        actorPopularity.setText(actor.getPopularity().toString().substring(0, actor.getPopularity().toString().indexOf(".") + 2));
 
                         Bundle b = new Bundle();
                         b.putString("mediaType", "Movie");
@@ -274,6 +314,7 @@ public class ActorDetailsFragment extends Fragment {
                     favoriteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            esprit.tn.cinecasa.utils.Context.FAV_CHANGED = true;
                             String url;
                             if (backImage) {
                                 favoriteButton.setBackgroundResource(R.drawable.ic_favorite_empty_64dp);

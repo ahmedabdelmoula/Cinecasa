@@ -58,13 +58,11 @@ public class TVShowsFragment extends Fragment {
     private String urlJsonObj = "https://api.themoviedb.org/3/movie/top_rated?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private ProgressDialog pDialog;
     private static String TAG = TVShowsFragment.class.getSimpleName();
-    CardView cardView0;
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter adapter;
-    List<TVShow> dataSource;
-    RoundedImageView big_img;
-    RecyclerViewHeader recyclerViewHeader;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter adapter;
+    private RoundedImageView big_img;
+    private RecyclerViewHeader recyclerViewHeader;
 
 
     @Override
@@ -81,18 +79,13 @@ public class TVShowsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.tv_shows, container, false);
 
-
-
-//        cardView0 = (CardView) view.findViewById(R.id.bigTVCard);
         big_img = (RoundedImageView) view.findViewById(R.id.big_image_tv_shows);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
 
-        recyclerView =
-                (RecyclerView) view.findViewById(R.id.tv_shows_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.tv_shows_recycler_view);
 
-//        layoutManager = new LinearLayoutManager(getContext());
         layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -117,12 +110,11 @@ public class TVShowsFragment extends Fragment {
                 Log.d(TAG, response.toString());
 
                 try {
-                    // Parsing json object response
 
                     JSONArray results = response.getJSONArray("results");
 
-                    dataSource = new ArrayList<>();
-                    // nsob fi movies lkol fi west arraylist
+                    ArrayList<TVShow> dataSourcee = new ArrayList<>();
+
                     for (int i = 0; i < results.length()-1; i++) {
 
                         JSONObject tvshow = (JSONObject) results.get(i);
@@ -174,16 +166,11 @@ public class TVShowsFragment extends Fragment {
                                     startActivityNoAnimation(intent);
                                 }
                             });
-
                         } else {
-                            dataSource.add(tvshow1);
+                            dataSourcee.add(tvshow1);
                         }
-
-
                     }
-
-
-                    adapter = new TVShowsRecyclerAdapter(dataSource);
+                    adapter = new TVShowsRecyclerAdapter(dataSourcee);
                     recyclerView.setAdapter(adapter);
 
                 } catch (JSONException e) {

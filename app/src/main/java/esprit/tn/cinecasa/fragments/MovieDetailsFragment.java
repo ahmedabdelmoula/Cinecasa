@@ -290,13 +290,22 @@ public class MovieDetailsFragment extends Fragment {
                     for (int i = 0; i < results.length(); i++) {
 
                         JSONObject cast = (JSONObject) results.get(i);
-                        Cast cast1 = new Cast(cast.getInt("cast_id"), cast.getString("character"), cast.getString("credit_id"), cast.getInt("gender"), cast.getInt("id"), cast.getString("name"), cast.getInt("order"), "https://image.tmdb.org/t/p/w150" + cast.getString("profile_path"));
+                        Cast cast1 = new Cast(
+                                cast.getInt("cast_id"),
+                                cast.getString("character"),
+                                cast.getString("credit_id"),
+                                cast.getInt("gender"),
+                                cast.getInt("id"),
+                                cast.getString("name"),
+                                cast.getInt("order"),
+                                "https://image.tmdb.org/t/p/w150" + cast.getString("profile_path"));
 
                         dataSource.add(cast1);
 
                     }
                     castList = dataSource;
                     castadapter = new CastAdapter(getActivity(), castList);
+
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setAdapter(castadapter);

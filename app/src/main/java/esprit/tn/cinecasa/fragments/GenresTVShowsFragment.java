@@ -92,7 +92,7 @@ public class GenresTVShowsFragment extends Fragment {
                         Double vote_average= tvshow.getDouble("vote_average");
                         String name= tvshow.getString("name");
                         Double popularity= tvshow.getDouble("popularity");
-                        String poster_path=("https://image.tmdb.org/t/p/w300"+tvshow.getString("poster_path"));
+                        String poster_path=("https://image.tmdb.org/t/p/w500"+tvshow.getString("poster_path"));
                         String original_language= tvshow.getString("original_language");
                         String original_name= tvshow.getString("original_name");
                         String genre_ids= tvshow.getString("genre_ids");
