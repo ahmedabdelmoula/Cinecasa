@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,7 @@ public class FavoriteFragment extends Fragment {
     private SmartTabLayout tabs;
     private Adapter adapter;
     private SmartTabLayout.TabProvider tabProvider;
+    private TextView nothingToShow;
     private int count = 0;
 
     @Nullable
@@ -63,6 +66,7 @@ public class FavoriteFragment extends Fragment {
 
         pager = (ViewPager) view.findViewById(R.id.pager);
         tabs = (SmartTabLayout) view.findViewById(R.id.tabs);
+        nothingToShow = (TextView) view.findViewById(R.id.nothing_to_show);
 
 
         fragments = new ArrayList<>();
@@ -131,22 +135,46 @@ public class FavoriteFragment extends Fragment {
                 try {
                     // Parsing json object response
 
-                    JSONArray results = response.getJSONArray("favorite");
-
                     List<String> dataSource = new ArrayList<>();
 
-                    for (int i = 0; i < results.length(); i++) {
+                    switch (response.getString("type")){
 
-                        JSONObject actorId = (JSONObject) results.get(i);
+                        case "array":
+                            nothingToShow.setVisibility(View.GONE);
+                            JSONArray results = response.getJSONArray("favorite");
 
-                        dataSource.add(actorId.getString("id_actor"));
+                            for (int i = 0; i < results.length(); i++) {
 
+                                JSONObject actorId = (JSONObject) results.get(i);
+
+                                dataSource.add(actorId.getString("id_actor"));
+
+                            }
+                            count = 0;
+
+                            for (int i = 0; i < dataSource.size(); i++) {
+                                makeMiniJsonObjectRequest(dataSource.get(i), i, dataSource.size());
+                            }
+                            break;
+
+
+                        case "object":
+                            nothingToShow.setVisibility(View.GONE);
+                            JSONObject result = response.getJSONObject("favorite");
+
+                            dataSource.add(result.getString("id_actor"));
+
+                            count = 0;
+                                makeMiniJsonObjectRequest(dataSource.get(0), 0, 1);
+                            break;
+
+
+                        default:
+                            hidepDialog();
+                            nothingToShow.setText("Nothing to Show");
+                            break;
                     }
-                    count = 0;
 
-                    for (int i = 0; i < dataSource.size(); i++) {
-                        makeMiniJsonObjectRequest(dataSource.get(i), i, dataSource.size());
-                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
