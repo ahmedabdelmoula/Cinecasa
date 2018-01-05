@@ -54,7 +54,6 @@ public class RecyclerImagesAdapter extends RecyclerView.Adapter<RecyclerImagesAd
                             .with(con)
                             .load(url)
                             .asBitmap()
-                            .placeholder(R.drawable.celebph)
                             .skipMemoryCache(true)
                             .into(img);
 
@@ -88,7 +87,6 @@ public class RecyclerImagesAdapter extends RecyclerView.Adapter<RecyclerImagesAd
                 .with(con)
                 .load(data.get(i).getPoster_path())
                 .asBitmap()
-                .placeholder(R.drawable.celebph)
                 .skipMemoryCache(true)
                 .into(viewHolder.itemImage);
     }

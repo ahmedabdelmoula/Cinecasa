@@ -50,7 +50,7 @@
 
                         <esprit.tn.cinecasa.utils.AutoResizeTextView
                             android:id="@+id/txtname"
-                            android:layout_width="160dp"
+                            android:layout_width="195dp"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:maxLines="1"
@@ -141,7 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:text="Rate :    "
                     android:textColor="@android:color/black"
                     android:textSize="22sp"

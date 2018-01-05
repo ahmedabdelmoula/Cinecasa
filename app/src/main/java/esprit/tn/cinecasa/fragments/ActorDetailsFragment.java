@@ -220,7 +220,7 @@ public class ActorDetailsFragment extends Fragment {
     private void getFav() {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                "http://idol-design.com/Cinecasa/Scripts/SelectActorsByUserId.php?id_user=1",// + Context.CONNECTED_USER.getId(),
+                "http://idol-design.com/Cinecasa/Scripts/SelectActorsByUserId.php?id_user=" + Context.CONNECTED_USER.getId(),
                 null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -228,17 +228,28 @@ public class ActorDetailsFragment extends Fragment {
 
                 try {
                     // Parsing json object response
-
-                    JSONArray results = response.getJSONArray("favorite");
-
                     List<String> dataSource = new ArrayList<>();
 
-                    for (int i = 0; i < results.length(); i++) {
+                    switch (response.getString("type")) {
 
-                        JSONObject actorId = (JSONObject) results.get(i);
+                        case "array":
 
-                        dataSource.add(actorId.getString("id_actor"));
+                            JSONArray results = response.getJSONArray("favorite");
 
+                            for (int i = 0; i < results.length(); i++) {
+
+                                JSONObject actorId = (JSONObject) results.get(i);
+
+                                dataSource.add(actorId.getString("id_actor"));
+                            }
+                            break;
+
+
+                        case "object":
+                            JSONObject result = response.getJSONObject("favorite");
+
+                            dataSource.add(result.getString("id_actor"));
+                            break;
                     }
 
                     try {
@@ -286,7 +297,6 @@ public class ActorDetailsFragment extends Fragment {
                         favoriteButton.setBackgroundResource(R.drawable.ic_favorite_full_64dp);
                         backImage = true;
                     }
-
 
                     mTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
                         @Override

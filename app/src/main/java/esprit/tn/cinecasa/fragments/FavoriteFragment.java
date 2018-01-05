@@ -31,6 +31,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import esprit.tn.cinecasa.CenterFabActivity;
 import esprit.tn.cinecasa.entities.Actor;
 import esprit.tn.cinecasa.utils.AppController;
 import esprit.tn.cinecasa.utils.CircleTransform;
@@ -83,18 +84,25 @@ public class FavoriteFragment extends Fragment {
 
     public void deleteFromFav() {
         int pos = pager.getCurrentItem();
-        fragments.remove(pos);
-        beforeFragments.remove(pos);
-        adapter.notifyDataSetChanged();
-        actors.remove(pos);
-        tabProvider = getTabProvider();
-        tabs.setCustomTabView(tabProvider);
-        tabs.setViewPager(pager);
+        if (adapter.getCount() == 1) {
 
-        if (adapter.getCount() == pos + 1)
-            pager.setCurrentItem(pos - 2, true);
-        else
-            pager.setCurrentItem(pos - 1, true);
+            CenterFabActivity c = (CenterFabActivity) getActivity();
+            c.fullReloadFav();
+
+        } else {
+            fragments.remove(pos);
+            beforeFragments.remove(pos);
+            adapter.notifyDataSetChanged();
+            actors.remove(pos);
+            tabProvider = getTabProvider();
+            tabs.setCustomTabView(tabProvider);
+            tabs.setViewPager(pager);
+
+            if (adapter.getCount() == pos + 1)
+                pager.setCurrentItem(pos - 2, true);
+            else
+                pager.setCurrentItem(pos - 1, true);
+        }
     }
 
     private static class Adapter extends FragmentStatePagerAdapter {
@@ -137,7 +145,7 @@ public class FavoriteFragment extends Fragment {
 
                     List<String> dataSource = new ArrayList<>();
 
-                    switch (response.getString("type")){
+                    switch (response.getString("type")) {
 
                         case "array":
                             nothingToShow.setVisibility(View.GONE);
@@ -165,7 +173,7 @@ public class FavoriteFragment extends Fragment {
                             dataSource.add(result.getString("id_actor"));
 
                             count = 0;
-                                makeMiniJsonObjectRequest(dataSource.get(0), 0, 1);
+                            makeMiniJsonObjectRequest(dataSource.get(0), 0, 1);
                             break;
 
 
