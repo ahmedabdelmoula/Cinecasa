@@ -7,6 +7,7 @@ package esprit.tn.cinecasa;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ import esprit.tn.cinecasa.utils.SessionManager;
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private EditText inputName, inputEmail, inputPassword;
-    private Button btnSignIn, btnSignUp, btnResetPassword;
+    private Button btnSignIn, btnSignUp;
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
@@ -66,9 +67,16 @@ public class RegisterActivity extends AppCompatActivity {
         inputName = (EditText) findViewById(R.id.name);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
+
+        Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "Lato-Light.ttf");
+        inputPassword.setTypeface(tf);
+        btnSignIn.setTypeface(tf);
+        btnSignUp.setTypeface(tf);
+        inputName.setTypeface(tf);
+        inputEmail.setTypeface(tf);
 
         if (!Context.registerSelected) {
+        btnSignIn.setVisibility(View.GONE);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().add(R.id.container, new LoginFragment(), "LoginFragment").commit();
         }
@@ -81,16 +89,10 @@ public class RegisterActivity extends AppCompatActivity {
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
+
+        btnSignIn.setVisibility(View.VISIBLE);
+
         // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
-            String UID = session.getUID();
-            Context.CURRENT_USER = db.getUserDetails(UID);
-            Context.CONNECTED_USER = db.getUserDetails(UID);
-            Intent intent = new Intent(RegisterActivity.this, CenterFabActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         // Register Button Click event
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -135,15 +137,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-        btnResetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnSignIn.setVisibility(View.GONE);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().add(R.id.container, new LoginFragment(), "LoginFragment").commit();
             }

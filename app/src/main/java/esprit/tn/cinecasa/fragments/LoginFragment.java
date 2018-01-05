@@ -184,13 +184,8 @@ public class LoginFragment extends Fragment {
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
+            checkLogin(session.getPrefMail(), session.getPrefMdp());
             // User is already logged in. Take him to main activity
-            String UID = session.getUID();
-            Context.CURRENT_USER = db.getUserDetails(UID);
-//            Context.CURRENT_USER = db.getUserDetails(UID);
-            Intent intent = new Intent(getActivity(), CenterFabActivity.class);
-            startActivity(intent);
-            getActivity().finish();
         }
         // Login button Click Event
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -244,15 +239,23 @@ public class LoginFragment extends Fragment {
 
 
         pDialog.setMessage("Logging in ...");
-        showDialog();
+//        showDialog();
 
+        String e, m;
+        if(session.isLoggedIn()){
+            e = session.getPrefMail();
+            m = session.getPrefMdp();
+        } else {
+            e = email;
+            m = password;
+        }
         StringRequest strReq = new StringRequest(Request.Method.GET,
-                AppConfig.URL_LOGIN + "?email=" + email + "&password=" + password, new Response.Listener<String>() {
+                AppConfig.URL_LOGIN + "?email=" + e + "&password=" + m, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response.toString());
-                hideDialog();
+//                hideDialog();
 
                 try {
                     response = response.substring(10);
@@ -268,11 +271,11 @@ public class LoginFragment extends Fragment {
                         // Now store the user in SQLite
                         int id = jObj.getInt("id");
                         String uid = jObj.getString("uid");
-                        session.setLogin(true, uid);
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
                         String created_at = user.getString("created_at");
+                        session.setLogin(true, uid, password, email);
 
                         // Inserting row in users table
                         db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));
@@ -287,6 +290,7 @@ public class LoginFragment extends Fragment {
                         fragment.getActivity().finish();
                     } else {
                         // Error in login. Get the error message
+                        session.setLogin(false, session.getUID(), "none", "none");
                         String errorMsg = jObj.getString("error_msg");
                         Toast.makeText(fragment.getContext(),
                                 errorMsg, Toast.LENGTH_LONG).show();
@@ -321,6 +325,7 @@ public class LoginFragment extends Fragment {
         };
 
         // Adding request to request queue
+        strReq.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
@@ -480,12 +485,12 @@ public class LoginFragment extends Fragment {
                         // Now store the user in SQLite
                         int id = jObj.getInt("id");
                         String uid = jObj.getString("uid");
-                        session.setLogin(true, uid);
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
                         String salt = user.getString("salt");
                         String created_at = user.getString("created_at");
+                        session.setLogin(true, uid, "Facebook", email);
 
                         // Inserting row in users table
                         db.addUser(id, name, email, salt, uid, created_at, salt);

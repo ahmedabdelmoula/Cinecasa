@@ -366,7 +366,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void logoutUser() {
-        session.setLogin(false, Context.CURRENT_USER.getUid());
+        session.setLogin(false, Context.CURRENT_USER.getUid(), "none", "none");
 
         db.deleteUsers();
 
@@ -656,11 +656,11 @@ public class UserProfileFragment extends Fragment {
                         // Now store the user in SQLite
                         int id = jObj.getInt("id");
                         String uid = jObj.getString("uid");
-                        session.setLogin(true, uid);
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
                         String email = user.getString("email");
                         String created_at = user.getString("created_at");
+                        session.setLogin(true, uid, password, email);
 
                         // Inserting row in users table
                         db.addUser(id, name, email, password, uid, created_at, user.getString("salt"));

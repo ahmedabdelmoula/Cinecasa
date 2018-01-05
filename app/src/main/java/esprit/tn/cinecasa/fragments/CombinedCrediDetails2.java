@@ -103,7 +103,6 @@ public class CombinedCrediDetails2 extends Fragment {
 
                     JSONArray results = response.getJSONArray("cast");
 
-                    dataSource = new ArrayList<>();
                     dataSourcee = new ArrayList<>();
 
 
@@ -211,7 +210,7 @@ public class CombinedCrediDetails2 extends Fragment {
     private void updateIndicatorTv() {
         int totalNum = fragments.size();
         int currentItem;
-        if (dataSource.isEmpty())
+        if (dataSourcee.isEmpty())
             currentItem = 0;
         else
             currentItem = viewPager.getCurrentItem() + 1;

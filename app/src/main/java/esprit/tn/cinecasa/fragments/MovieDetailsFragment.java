@@ -306,7 +306,6 @@ public class MovieDetailsFragment extends Fragment {
                     }
                     castList = dataSource;
                     castadapter = new CastAdapter(getActivity(), castList);
-
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setAdapter(castadapter);

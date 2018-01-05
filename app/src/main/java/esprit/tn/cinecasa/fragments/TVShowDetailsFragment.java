@@ -46,6 +46,7 @@ import javax.xml.datatype.Duration;
 
 import esprit.tn.cinecasa.R;
 import esprit.tn.cinecasa.adapters.CastAdapter;
+import esprit.tn.cinecasa.adapters.CastAdapter2;
 import esprit.tn.cinecasa.adapters.ReviewAdapter;
 import esprit.tn.cinecasa.entities.Cast;
 import esprit.tn.cinecasa.entities.Review;
@@ -65,7 +66,7 @@ public class TVShowDetailsFragment extends Fragment {
     ExpandableHeightListView listIntReview;
     private View view;
     private RecyclerView recyclerView;
-    private CastAdapter castadapter;
+    private CastAdapter2 castadapter;
     private List<Cast> castList;
     Fragment fragment = this;
     RatingBar txtratevalue;
@@ -130,10 +131,8 @@ public class TVShowDetailsFragment extends Fragment {
             String[] splitted = date.split("-");
             txtfirst_air_date.setText(splitted[2] + " " + months[Integer.parseInt(splitted[1]) - 1] + " " + splitted[0]);
         } catch (Exception e) {
-            txtfirst_air_date.setText(Context.ITEM_MOVIE.getRelease_date());
+            txtfirst_air_date.setText(Context.ITEM_TV_SHOW.getFirst_air_date());
         }
-
-        txtfirst_air_date.setText(Context.ITEM_TV_SHOW.getFirst_air_date());
         txtoverview.setText(Context.ITEM_TV_SHOW.getOverview());
 //        Picasso.with(getActivity()).load(Context.ITEM_TV_SHOW.getPoster_path()).into(ivposter);
 
@@ -200,7 +199,7 @@ public class TVShowDetailsFragment extends Fragment {
 
                     }
                     castList = dataSource;
-                    castadapter = new CastAdapter(getActivity(), castList);
+                    castadapter = new CastAdapter2(getActivity(), castList);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setAdapter(castadapter);

@@ -220,10 +220,13 @@ public class SmartTabLayout extends HorizontalScrollView {
             scrollToTab(viewPager.getCurrentItem(), 0);
 
             View tab = getTabAt(0);
-            tab.setScaleX(1.7f);
-            tab.setScaleY(1.7f);
+            if(tab != null){
+                tab.setScaleX(1.7f);
+                tab.setScaleY(1.7f);
 
-            tab.setTranslationY(finalCirlceYTranslation);
+                tab.setTranslationY(finalCirlceYTranslation);
+            }
+
         }
     }
 
