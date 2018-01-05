@@ -3,6 +3,7 @@ package esprit.tn.cinecasa.fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +47,7 @@ import esprit.tn.cinecasa.entities.TVShow;
 import esprit.tn.cinecasa.utils.AppController;
 import esprit.tn.cinecasa.utils.Context;
 import esprit.tn.cinecasa.utils.CustomThumbCard;
+import esprit.tn.cinecasa.utils.OnLoadMoreListener;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
 
@@ -55,14 +57,17 @@ import it.gmariotti.cardslib.library.view.CardView;
 
 public class TVShowsFragment extends Fragment {
 
+    private int p=1;
+    private String urlJsonObjmore = "https://api.themoviedb.org/3/tv/top_rated?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=";
     private String urlJsonObj = "https://api.themoviedb.org/3/movie/top_rated?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
     private ProgressDialog pDialog;
     private static String TAG = TVShowsFragment.class.getSimpleName();
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter adapter;
+    private TVShowsRecyclerAdapter adapter;
     private RoundedImageView big_img;
     private RecyclerViewHeader recyclerViewHeader;
+    List<TVShow> datatv;
 
 
     @Override
@@ -71,6 +76,8 @@ public class TVShowsFragment extends Fragment {
 
         if (getArguments().getString("url") != null)
             urlJsonObj = getArguments().getString("url");
+        if (getArguments().getString("urlmore") != null)
+            urlJsonObjmore = getArguments().getString("urlmore");
     }
 
     @Nullable
@@ -155,7 +162,7 @@ public class TVShowsFragment extends Fragment {
                                     .with(getContext())
                                     .load(backdrop_path)
                                     .asBitmap()
-                                    .placeholder(R.drawable.ph)
+                                    .placeholder(R.drawable.phbig)
                                     .skipMemoryCache( true )
                                     .into(big_img);
                             big_img.setOnClickListener(new View.OnClickListener() {
@@ -171,8 +178,31 @@ public class TVShowsFragment extends Fragment {
                             dataSourcee.add(tvshow1);
                         }
                     }
-                    adapter = new TVShowsRecyclerAdapter(dataSourcee);
+                    datatv=dataSourcee;
+                    adapter = new TVShowsRecyclerAdapter(recyclerView,dataSourcee,getActivity());
                     recyclerView.setAdapter(adapter);
+                    adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+                        @Override
+                        public void onLoadMore() {
+                            //datamovie.add(null);
+                            //adapter.notifyItemInserted(datamovie.size() - 1);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //datamovie.remove(datamovie.size() - 1);
+                                    //adapter.notifyItemRemoved(datamovie.size());
+
+                                    //Generating more data
+                                    p++;
+                                    dataa();
+
+                                    adapter.notifyDataSetChanged();
+                                    adapter.setLoaded();
+                                }
+                            }, 1000);
+
+                        }
+                    });
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -214,4 +244,84 @@ public class TVShowsFragment extends Fragment {
             pDialog.dismiss();
     }
 
+    void dataa(){
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                    urlJsonObjmore+p, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d(TAG, response.toString());
+
+                    try {
+
+                        JSONArray results = response.getJSONArray("results");
+                    // Parsing json object response
+
+                    ArrayList<TVShow> dataSourcee = new ArrayList<>();
+
+                    for (int i = 0; i < results.length()-1; i++) {
+
+                        JSONObject tvshow = (JSONObject) results.get(i);
+
+                        String vote_count = tvshow.getString("vote_count");
+                        int id = tvshow.getInt("id");
+                        Double vote_average = tvshow.getDouble("vote_average");
+                        String name = tvshow.getString("name");
+                        Double popularity = tvshow.getDouble("popularity");
+                        String poster_path = "https://image.tmdb.org/t/p/w300" + tvshow.getString("poster_path");
+                        String original_language = tvshow.getString("original_language");
+                        String original_name = tvshow.getString("original_name");
+                        String genre_ids = tvshow.getString("genre_ids");
+                        String origin_country = tvshow.getString("origin_country");
+                        String backdrop_path = "https://image.tmdb.org/t/p/w500" + tvshow.getString("backdrop_path");
+                        String overview = tvshow.getString("overview");
+                        String first_air_date = tvshow.getString("first_air_date");
+
+                        final TVShow tvshow1 = new TVShow(genre_ids,
+                                original_name,
+                                name,
+                                popularity,
+                                origin_country,
+                                vote_count,
+                                first_air_date,
+                                backdrop_path,
+                                original_language,
+                                id,
+                                vote_average,
+                                overview,
+                                poster_path);
+                        tvshow1.setOverview(overview);
+                        tvshow1.setPoster_path(poster_path);
+                        tvshow1.setBackdrop_path(backdrop_path);
+
+
+                        dataSourcee.add(tvshow1);
+                    }
+
+                    datatv.addAll(dataSourcee);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+                hidepDialog();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                // hide the progress dialog
+                hidepDialog();
+            }
+        });
+        // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
 }

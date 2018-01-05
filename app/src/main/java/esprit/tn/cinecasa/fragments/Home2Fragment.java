@@ -3,10 +3,9 @@ package esprit.tn.cinecasa.fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,10 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -27,10 +22,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
-import com.hanks.htextview.base.HTextView;
-import com.hanks.htextview.scale.ScaleTextView;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,17 +31,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import esprit.tn.cinecasa.CenterFabActivity;
 import esprit.tn.cinecasa.DetailsActivity;
-import esprit.tn.cinecasa.PanelActivity;
 import esprit.tn.cinecasa.utils.AppController;
 import esprit.tn.cinecasa.utils.Context;
-import esprit.tn.cinecasa.utils.CustomThumbCard;
 import esprit.tn.cinecasa.entities.Movie;
 import esprit.tn.cinecasa.R;
 import esprit.tn.cinecasa.adapters.RecyclerAdapter;
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.view.CardView;
+import esprit.tn.cinecasa.utils.OnLoadMoreListener;
 
 
 /**
@@ -58,14 +46,17 @@ import it.gmariotti.cardslib.library.view.CardView;
 
 public class Home2Fragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    private int p=1;
     private String urlJsonObj = "https://api.themoviedb.org/3/movie/top_rated?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US";
+    private String urlJsonObjmore = "https://api.themoviedb.org/3/movie/top_rated?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=";
     private ProgressDialog pDialog;
     private static String TAG = Home2Fragment.class.getSimpleName();
     RecyclerView recyclerView;
     RecyclerViewHeader recyclerViewHeader;
     RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter adapter;
+    RecyclerAdapter adapter;
     RoundedImageView big_img;
+    List<Movie> datamovie;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +64,8 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
 
         if (getArguments().getString("url") != null)
             urlJsonObj = getArguments().getString("url");
+        if (getArguments().getString("urlmore") != null)
+            urlJsonObjmore = getArguments().getString("urlmore");
     }
 
     @Nullable
@@ -154,7 +147,7 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
                                     .load(backdrop_path)
                                     .asBitmap()
                                     .skipMemoryCache(true)
-                                    .placeholder(R.drawable.ph)
+                                    .placeholder(R.drawable.phbig)
                                     .skipMemoryCache( true )
                                     .into(big_img);
                             big_img.setOnClickListener(new View.OnClickListener() {
@@ -171,9 +164,33 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
                             dataSourcee.add(movie1);
                         }
                     }
-
-                    adapter = new RecyclerAdapter(dataSourcee);
+                    datamovie=dataSourcee;
+                    adapter = new RecyclerAdapter(recyclerView,dataSourcee,getActivity());
                     recyclerView.setAdapter(adapter);
+                    adapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+                        @Override
+                        public void onLoadMore() {
+                                //datamovie.add(null);
+                                //adapter.notifyItemInserted(datamovie.size() - 1);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //datamovie.remove(datamovie.size() - 1);
+                                        //adapter.notifyItemRemoved(datamovie.size());
+
+                                        //Generating more data
+                                        p++;
+                                        dataa();
+
+                                        adapter.notifyDataSetChanged();
+                                        adapter.setLoaded();
+                                    }
+                                }, 1000);
+
+                        }
+                    });
+
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -213,4 +230,75 @@ public class Home2Fragment extends Fragment implements AdapterView.OnItemClickLi
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
+
+    void dataa(){
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlJsonObjmore+p, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+
+                try {
+                    // Parsing json object response
+
+                    JSONArray results = response.getJSONArray("results");
+
+
+                    ArrayList<Movie> dataSourcee = new ArrayList<>();
+
+                    for (int i = 0; i < results.length() - 1; i++) {
+
+                        JSONObject movie = (JSONObject) results.get(i);
+
+
+                        String vote_count = movie.getString("vote_count");
+                        int id = movie.getInt("id");
+                        boolean video = movie.getBoolean("video");
+                        Double vote_average = movie.getDouble("vote_average");
+                        String title = movie.getString("title");
+                        Double popularity = movie.getDouble("popularity");
+                        String poster_path = ("https://image.tmdb.org/t/p/w150" + movie.getString("poster_path"));
+                        String original_language = movie.getString("original_language");
+                        String original_title = movie.getString("original_title");
+                        String genre_ids = movie.getString("genre_ids");
+                        String backdrop_path = "https://image.tmdb.org/t/p/w500" + movie.getString("backdrop_path");
+                        boolean adult = movie.getBoolean("adult");
+                        String overview = movie.getString("overview");
+                        String release_date = movie.getString("release_date");
+
+                        final Movie movie1 = new Movie(vote_count, id, video, vote_average, title, popularity, poster_path, original_language, original_title, genre_ids, adult, null, overview, release_date);
+                        movie1.setBackdrop_path(backdrop_path);
+
+
+                            dataSourcee.add(movie1);
+                        }
+
+                    datamovie.addAll(dataSourcee);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+                hidepDialog();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                // hide the progress dialog
+                hidepDialog();
+            }
+        });
+        // Adding request to request queue
+        jsonObjReq.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
 }

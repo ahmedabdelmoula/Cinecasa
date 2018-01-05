@@ -96,21 +96,25 @@ public class HomeFragment extends Fragment {
 
         Fragment frag = new Home2Fragment();
         Bundle b = new Bundle();
+        b.putString("urlmore", "https://api.themoviedb.org/3/movie/popular?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=");
         b.putString("url", "https://api.themoviedb.org/3/movie/popular?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US");
         frag.setArguments(b);
 
         Fragment frag1 = new Home2Fragment();
         Bundle b1 = new Bundle();
+        b1.putString("urlmore", "https://api.themoviedb.org/3/movie/now_playing?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=");
         b1.putString("url", "https://api.themoviedb.org/3/movie/now_playing?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US");
         frag1.setArguments(b1);
 
         Fragment frag2 = new Home2Fragment();
         Bundle b2 = new Bundle();
+        b2.putString("urlmore", "https://api.themoviedb.org/3/movie/top_rated?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=");
         b2.putString("url", "https://api.themoviedb.org/3/movie/top_rated?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US");
         frag2.setArguments(b2);
 
         Fragment frag3 = new Home2Fragment();
         Bundle b3 = new Bundle();
+        b3.putString("urlmore", "https://api.themoviedb.org/3/movie/upcoming?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US&page=");
         b3.putString("url", "https://api.themoviedb.org/3/movie/upcoming?api_key=7c408d3e3e9aec97d01604333744b592&language=en-US");
         frag3.setArguments(b3);
 

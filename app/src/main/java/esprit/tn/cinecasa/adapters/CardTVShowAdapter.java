@@ -72,7 +72,7 @@ public class CardTVShowAdapter extends RecyclerView.Adapter<CardTVShowAdapter.My
         holder.title.setText(tvShow.getName());
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(tvShow.getBackdrop_path()).placeholder(R.drawable.ph).into(holder.thumbnail);
+        Glide.with(mContext).load(tvShow.getBackdrop_path()).placeholder(R.drawable.phbig).into(holder.thumbnail);
 
 
     }
